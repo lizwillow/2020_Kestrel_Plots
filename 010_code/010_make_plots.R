@@ -260,6 +260,11 @@ save_ggplot("pa_number_of_chicks.png", rfile, v, width = w, height = h, units = 
 
 # by organization
 pa_nestboxes_clean %>%
+  dplyr::mutate(org = replace(
+    org,
+    org == "Devich Farbotnik in Bucks County, PA",
+    "Farbotnik"
+  )) %>%
   kestrel_plot_chicks_per_year(region = "Pennsylvania", combined = FALSE)
 save_ggplot("pa_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
@@ -268,6 +273,11 @@ pa_nestboxes_clean %>%
   expand(year, org) %>%
   left_join(pa_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
+  dplyr::mutate(org = replace(
+    org,
+    org == "Devich Farbotnik in Bucks County, PA",
+    "Farbotnik"
+  )) %>%
   kestrel_plot_cumulative(region = "Pennsylvania")
 save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
 
@@ -276,6 +286,11 @@ save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, he
 
 # by org
 pa_nestboxes_clean %>%
+  dplyr::mutate(org = replace(
+    org,
+    org == "Devich Farbotnik in Bucks County, PA",
+    "Farbotnik"
+  )) %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
   kestrel_plot_chicks_per_box(region = "Pennsylvania")
 save_ggplot("pa_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
@@ -304,6 +319,28 @@ pa_nestboxes_clean %>%
   theme(legend.position = "none") +
   ggtitle("McKelvie kestrel nest box program")
 save_ggplot("pa_mckelvie_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
+
+# Farbotnik separately -----------------------------------------------------
+
+
+# chicks per box
+pa_nestboxes_clean %>%
+  dplyr::filter(org == "Devich Farbotnik in Bucks County, PA") %>%
+  dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
+  kestrel_plot_chicks_per_box(region = "Devich Farbotnik in Bucks County, PA") +
+  theme(legend.position = "none") +
+  ggtitle("Devich Farbotnik in Bucks County, PA")
+save_ggplot("pa_farbotnik_chicks_per_nested_box.png", rfile, v, width = w, height = h, units = "in")
+
+# total chicks from McKelvie
+pa_nestboxes_clean %>%
+  dplyr::filter(org == "Devich Farbotnik in Bucks County, PA") %>%
+  kestrel_plot_chicks_per_year(region = "Devich Farbotnik in Bucks County, PA") +
+  theme(legend.position = "none") +
+  ggtitle("Devich Farbotnik in Bucks County, PA")
+save_ggplot("pa_farbotnik_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
+
+
 
 # ***************************************************************************
 # *** Connecticut ------------------------------------------------------------
