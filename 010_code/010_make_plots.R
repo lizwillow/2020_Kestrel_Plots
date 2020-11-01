@@ -33,15 +33,27 @@ pa_mckelvie <- read_excel(here::here(paste0(v, "_data"),"2020_PA_mckelvie.xlsx")
 ct_nestboxes <- read_excel(here::here(paste0(v, "_data"),
                                       "2020_CT.xlsx"))
 
+me_nestboxes <- read_csv(here::here(paste0(v, "_data"),
+                                    "2020_ME.csv"), 
+                     col_types = cols(X5 = col_skip(), X6 = col_skip())) %>%
+                       tidyr::drop_na()
+
 # libraries
 library(viridis)
 scales::show_col(viridis_pal()(20)) #look at colors
 viridis_pal()(20)
+library(gridExtra)
+library(grid)
 
 # files to source
 source(here::here(paste0(v, "_code"),paste0("general_functions.R"))) 
+source(here::here(paste0(v, "_code"),paste0(v, "_functions.R"))) 
 
 new_rfiles(rfile, v)
+
+# height and width of plots
+w = 8
+h = 5
 
 # *************************************************************************
 # *** New York ------------------------------------------------------------
@@ -65,12 +77,12 @@ ny_nestboxes_clean %>%
   dplyr::group_by(year) %>%
   dplyr::summarise(sum_chicks_banded_per_year = sum(chicks_banded)) %>%
   kestrel_plot_chicks_per_year(region = "New York", combined = TRUE)
-save_ggplot("ny_number_of_chicks.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("ny_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
 
 # by organization
 ny_nestboxes_clean %>%
   kestrel_plot_chicks_per_year(region = "New York", combined = FALSE)
-save_ggplot("ny_number_of_chicks_by_org.png", rfile, v, width = 6, height = 6, units = "in")
+save_ggplot("ny_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
 # cumulative plot using geom_area
 ny_nestboxes_clean %>%
@@ -78,7 +90,7 @@ ny_nestboxes_clean %>%
   left_join(ny_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
   kestrel_plot_cumulative(region = "New York")
-save_ggplot("ny_number_of_chicks_by_org_cumulative.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("ny_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
 
 
 # chicks per box ------------------------------------------------------
@@ -87,7 +99,7 @@ save_ggplot("ny_number_of_chicks_by_org_cumulative.png", rfile, v, width = 6, he
 ny_nestboxes_clean %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
   kestrel_plot_chicks_per_box(region = "New York")
-save_ggplot("ny_chicks_per_nested_box.png", rfile, v, width = 7, height = 4, units = "in")
+save_ggplot("ny_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
 
 # by gender
 ny_nestboxes_clean %>%
@@ -180,7 +192,7 @@ nj_nestboxes_clean %>%
   dplyr::group_by(year) %>%
   dplyr::summarise(sum_chicks_banded_per_year = sum(chicks_banded)) %>%
   kestrel_plot_chicks_per_year(region = "New Jersey", combined = TRUE)
-save_ggplot("nj_number_of_chicks.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("nj_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
 
 
 # by organization
@@ -188,7 +200,7 @@ nj_nestboxes_clean$org = sub("Friends of Hopewell", "Friends of Hopewell \n",
                              nj_nestboxes_clean$org)
 nj_nestboxes_clean %>%
   kestrel_plot_chicks_per_year(region = "New Jersey", combined = FALSE)
-save_ggplot("nj_number_of_chicks_by_org.png", rfile, v, width = 6, height = 6, units = "in")
+save_ggplot("nj_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
 # cumulative plot using geom_area
 nj_nestboxes_clean %>%
@@ -196,7 +208,7 @@ nj_nestboxes_clean %>%
   left_join(nj_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
   kestrel_plot_cumulative(region = "New Jersey")
-save_ggplot("nj_number_of_chicks_by_org_cumulative.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("nj_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
 
 
 # chicks per box ------------------------------------------------------
@@ -205,7 +217,7 @@ save_ggplot("nj_number_of_chicks_by_org_cumulative.png", rfile, v, width = 6, he
 nj_nestboxes_clean %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
   kestrel_plot_chicks_per_box(region = "New Jersey")
-save_ggplot("nj_chicks_per_nested_box.png", rfile, v, width = 7, height = 4, units = "in")
+save_ggplot("nj_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
 
 
 
@@ -244,12 +256,12 @@ pa_nestboxes_clean %>%
   dplyr::group_by(year) %>%
   dplyr::summarise(sum_chicks_banded_per_year = sum(chicks_banded)) %>%
   kestrel_plot_chicks_per_year(region = "Pennsylvania", combined = TRUE)
-save_ggplot("pa_number_of_chicks.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("pa_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
 
 # by organization
 pa_nestboxes_clean %>%
   kestrel_plot_chicks_per_year(region = "Pennsylvania", combined = FALSE)
-save_ggplot("pa_number_of_chicks_by_org.png", rfile, v, width = 6, height = 6, units = "in")
+save_ggplot("pa_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
 # cumulative plot using geom_area
 pa_nestboxes_clean %>%
@@ -257,7 +269,7 @@ pa_nestboxes_clean %>%
   left_join(pa_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
   kestrel_plot_cumulative(region = "Pennsylvania")
-save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
 
 
 # chicks per box ------------------------------------------------------
@@ -266,7 +278,7 @@ save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = 6, he
 pa_nestboxes_clean %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
   kestrel_plot_chicks_per_box(region = "Pennsylvania")
-save_ggplot("pa_chicks_per_nested_box.png", rfile, v, width = 7, height = 4, units = "in")
+save_ggplot("pa_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
 
 
 # McKelvie separately -----------------------------------------------------
@@ -283,7 +295,7 @@ pa_nestboxes_clean %>%
                          dev_scaler = 13)) +
   theme(legend.position = "none") +
   ggtitle("McKelvie kestrel nest box program")
-save_ggplot("pa_mckelvie_chicks_per_nested_box.png", rfile, v, width = 7, height = 4, units = "in")
+save_ggplot("pa_mckelvie_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
 
 # total chicks from McKelvie
 pa_nestboxes_clean %>%
@@ -291,7 +303,7 @@ pa_nestboxes_clean %>%
   kestrel_plot_chicks_per_year(region = "McKelvie") +
   theme(legend.position = "none") +
   ggtitle("McKelvie kestrel nest box program")
-save_ggplot("pa_mckelvie_number_of_chicks.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("pa_mckelvie_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
 
 # ***************************************************************************
 # *** Connecticut ------------------------------------------------------------
@@ -318,12 +330,12 @@ ct_nestboxes_clean %>%
   dplyr::group_by(year) %>%
   dplyr::summarise(sum_chicks_banded_per_year = sum(chicks_banded)) %>%
   kestrel_plot_chicks_per_year(region = "Connecticut", combined = TRUE)
-save_ggplot("ct_number_of_chicks.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("ct_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
 
 # by organization
 ct_nestboxes_clean %>%
   kestrel_plot_chicks_per_year(region = "Connecticut", combined = FALSE)
-save_ggplot("ct_number_of_chicks_by_org.png", rfile, v, width = 6, height = 6, units = "in")
+save_ggplot("ct_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
 # cumulative plot using geom_area
 ct_nestboxes_clean %>%
@@ -331,7 +343,7 @@ ct_nestboxes_clean %>%
   left_join(ct_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
   kestrel_plot_cumulative(region = "Connecticut")
-save_ggplot("ct_number_of_chicks_by_org_cumulative.png", rfile, v, width = 6, height = 4, units = "in")
+save_ggplot("ct_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
 
 
 # chicks per box ------------------------------------------------------
@@ -340,9 +352,58 @@ save_ggplot("ct_number_of_chicks_by_org_cumulative.png", rfile, v, width = 6, he
 ct_nestboxes_clean %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
   kestrel_plot_chicks_per_box(region = "Connecticut")
-save_ggplot("ct_chicks_per_nested_box.png", rfile, v, width = 7, height = 4, units = "in")
+save_ggplot("ct_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
 
 
+# ***************************************************************************
+# *** Maine ------------------------------------------------------------
+# ***************************************************************************
+
+# clean data --------------------------------------------------------------
+
+me_nestboxes_clean <- me_nestboxes %>%
+  janitor::clean_names() %>%
+  dplyr::rename(chicks_banded = nestlings_to_banding_age) %>%
+  dplyr::mutate(year = zoo::as.Date.yearmon(year))
+
+
+# chicks per year -----------------------------------------------------
+
+# combined
+p1 <- me_nestboxes_clean %>%
+  dplyr::group_by(year) %>%
+  dplyr::summarise(sum_chicks_banded_per_year = sum(chicks_banded)) %>%
+  kestrel_plot_chicks_per_year(region = "Maine", combined = TRUE) +
+  ggtitle("St. Albans Maine kestrel nest box project")
+p2 <- grid.arrange(p1, top = textGrob("Data provided by Marek Plater",
+             x = .99,
+             just = "right", # left-aligned,
+             gp = gpar(fontsize = 8)) # bigger font
+)
+save_ggplot("me_number_of_chicks.png", rfile, v, width = w, height = h, units = "in",
+            plot = p2)
+
+# by organization
+me_nestboxes_clean %>%
+  kestrel_plot_chicks_per_year(region = "Maine", combined = FALSE)
+save_ggplot("me_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
+
+# cumulative plot using geom_area
+me_nestboxes_clean %>%
+  expand(year, org) %>%
+  left_join(me_nestboxes_clean) %>%
+  replace(is.na(.), 0) %>%
+  kestrel_plot_cumulative(region = "Maine")
+save_ggplot("me_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
+
+
+# chicks per box ------------------------------------------------------
+
+# by org
+me_nestboxes_clean %>%
+  dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
+  kestrel_plot_chicks_per_box(region = "Maine")
+save_ggplot("me_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
 
 
 
