@@ -16,7 +16,12 @@ kestrel_plot_cumulative <- function(df, region) {
                  minor_breaks = NULL) +
     theme(axis.text.x=element_text(angle=60, hjust=1),
           axis.title = element_blank(),
-          legend.title = element_blank())
+          legend.title = element_blank(),
+          legend.position = "bottom",
+          ## center titles and make main title bold:
+          plot.title = element_text(hjust = 0.5, face="bold"),
+          plot.subtitle = element_text(hjust = 0.5),
+          text = element_text(size=14))
 }
 
 # total num chicks by org
@@ -70,7 +75,7 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE) {
 
 
 
-kestrel_plot_chicks_per_box <- function(df, region) {
+kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 3) {
   df %>% ggplot() +
     geom_line(aes(x = year, y = chicks_per_box, color = org), 
               alpha = 0.5,
@@ -79,7 +84,7 @@ kestrel_plot_chicks_per_box <- function(df, region) {
                size = 3) +
     ggrepel::geom_text_repel(aes(x = year, y = chicks_per_box,
                                  label=chicks_per_box),
-                             vjust=2, size = 3) +
+                             vjust=2, size = text_repel_size) +
     theme_minimal() + 
     theme(axis.title = element_blank(),
           axis.text.x=element_text(angle=60, hjust=1),

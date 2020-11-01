@@ -305,7 +305,8 @@ wrapper <- function(label, dev_width = dev.size("in")[1], dev_scaler = 12)  {
 pa_nestboxes_clean %>%
   dplyr::filter(org == "McKelvie") %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
-  kestrel_plot_chicks_per_box(region = "McKelvie") +
+  kestrel_plot_chicks_per_box(region = "McKelvie",
+                              text_repel_size = 10) +
   labs(caption = wrapper("Note: Prior to 2018 we were not putting enough chips on the bottom of the boxes, or were putting chips in too early in the year. Sometimes this resulted in starlings removing much of the chip layer before kestrels took up residence, and the kestrel eggs were laid on a very thin chip layer, or even on bare wood. Beginning in 2018 we added a 3-4 inch layer of fresh chips to each box immediately prior to nesting season. This greatly reduced the number of box failures, as you can see from our data.",
                          dev_scaler = 13)) +
   theme(legend.position = "none") +
@@ -327,12 +328,13 @@ save_ggplot("pa_mckelvie_number_of_chicks.png", rfile, v, width = w, height = h,
 pa_nestboxes_clean %>%
   dplyr::filter(org == "Devich Farbotnik in Bucks County, PA") %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
-  kestrel_plot_chicks_per_box(region = "Devich Farbotnik in Bucks County, PA") +
+  kestrel_plot_chicks_per_box(region = "Devich Farbotnik in Bucks County, PA",
+                              text_repel_size = 10) +
   theme(legend.position = "none") +
   ggtitle("Devich Farbotnik in Bucks County, PA")
 save_ggplot("pa_farbotnik_chicks_per_nested_box.png", rfile, v, width = w, height = h, units = "in")
 
-# total chicks from McKelvie
+# total chicks
 pa_nestboxes_clean %>%
   dplyr::filter(org == "Devich Farbotnik in Bucks County, PA") %>%
   kestrel_plot_chicks_per_year(region = "Devich Farbotnik in Bucks County, PA") +
