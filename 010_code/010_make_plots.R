@@ -54,6 +54,7 @@ new_rfiles(rfile, v)
 # height and width of plots
 w = 8
 h = 5
+h_cum = 7
 
 # *************************************************************************
 # *** New York ------------------------------------------------------------
@@ -90,7 +91,7 @@ ny_nestboxes_clean %>%
   left_join(ny_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
   kestrel_plot_cumulative(region = "New York")
-save_ggplot("ny_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
+save_ggplot("ny_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h_cum, units = "in")
 
 
 # chicks per box ------------------------------------------------------
@@ -208,7 +209,7 @@ nj_nestboxes_clean %>%
   left_join(nj_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
   kestrel_plot_cumulative(region = "New Jersey")
-save_ggplot("nj_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
+save_ggplot("nj_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h_cum, units = "in")
 
 
 # chicks per box ------------------------------------------------------
@@ -244,7 +245,17 @@ pa_nestboxes_clean <- pa_nestboxes %>%
   dplyr::rename(org = x1,
                 chicks_per_box = chicks_nested_box, 
                 chicks_banded = number_chicks) %>%
-  dplyr::bind_rows(pa_mckelvie_clean)
+  dplyr::bind_rows(pa_mckelvie_clean) %>%
+  dplyr::mutate(org = replace(
+    org,
+    org == "Devich Farbotnik in Bucks County",
+    "Farbotnik"
+  )) %>%
+  dplyr::mutate(org = replace(
+    org,
+    org == "Jere Schade and Steve Benningfield in Bucks County",
+    "Schade and Benningfield"
+  ))
 
 pa_nestboxes_clean$org <- sub("PA ", "", pa_nestboxes_clean$org)
   
@@ -260,11 +271,6 @@ save_ggplot("pa_number_of_chicks.png", rfile, v, width = w, height = h, units = 
 
 # by organization
 pa_nestboxes_clean %>%
-  dplyr::mutate(org = replace(
-    org,
-    org == "Devich Farbotnik in Bucks County, PA",
-    "Farbotnik"
-  )) %>%
   kestrel_plot_chicks_per_year(region = "Pennsylvania", combined = FALSE)
 save_ggplot("pa_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
@@ -273,13 +279,9 @@ pa_nestboxes_clean %>%
   expand(year, org) %>%
   left_join(pa_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
-  dplyr::mutate(org = replace(
-    org,
-    org == "Devich Farbotnik in Bucks County, PA",
-    "Farbotnik"
-  )) %>%
   kestrel_plot_cumulative(region = "Pennsylvania")
-save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
+save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, 
+            height = h_cum, units = "in")
 
 
 # chicks per box ------------------------------------------------------
@@ -305,8 +307,7 @@ wrapper <- function(label, dev_width = dev.size("in")[1], dev_scaler = 12)  {
 pa_nestboxes_clean %>%
   dplyr::filter(org == "McKelvie") %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
-  kestrel_plot_chicks_per_box(region = "McKelvie",
-                              text_repel_size = 10) +
+  kestrel_plot_chicks_per_box(region = "McKelvie") +
   labs(caption = wrapper("Note: Prior to 2018 we were not putting enough chips on the bottom of the boxes, or were putting chips in too early in the year. Sometimes this resulted in starlings removing much of the chip layer before kestrels took up residence, and the kestrel eggs were laid on a very thin chip layer, or even on bare wood. Beginning in 2018 we added a 3-4 inch layer of fresh chips to each box immediately prior to nesting season. This greatly reduced the number of box failures, as you can see from our data.",
                          dev_scaler = 13)) +
   theme(legend.position = "none") +
@@ -326,22 +327,41 @@ save_ggplot("pa_mckelvie_number_of_chicks.png", rfile, v, width = w, height = h,
 
 # chicks per box
 pa_nestboxes_clean %>%
-  dplyr::filter(org == "Devich Farbotnik in Bucks County, PA") %>%
+  dplyr::filter(org == "Farbotnik") %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
   kestrel_plot_chicks_per_box(region = "Devich Farbotnik in Bucks County, PA",
-                              text_repel_size = 10) +
+                              text_repel_size = 4) +
   theme(legend.position = "none") +
   ggtitle("Devich Farbotnik in Bucks County, PA")
 save_ggplot("pa_farbotnik_chicks_per_nested_box.png", rfile, v, width = w, height = h, units = "in")
 
 # total chicks
 pa_nestboxes_clean %>%
-  dplyr::filter(org == "Devich Farbotnik in Bucks County, PA") %>%
+  dplyr::filter(org == "Farbotnik") %>%
   kestrel_plot_chicks_per_year(region = "Devich Farbotnik in Bucks County, PA") +
   theme(legend.position = "none") +
   ggtitle("Devich Farbotnik in Bucks County, PA")
 save_ggplot("pa_farbotnik_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
 
+# Schade and Benningfield separately -----------------------------------------------------
+
+
+# chicks per box
+pa_nestboxes_clean %>%
+  dplyr::filter(org == "Schade and Benningfield") %>%
+  dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
+  kestrel_plot_chicks_per_box(region = "Jere Schade and Steve Benningfield in Bucks County, PA") +
+  theme(legend.position = "none") +
+  ggtitle("Jere Schade and Steve Benningfield in Bucks County, PA")
+save_ggplot("pa_schade_benningfield_chicks_per_nested_box.png", rfile, v, width = w, height = h, units = "in")
+
+# total chicks
+pa_nestboxes_clean %>%
+  dplyr::filter(org == "Schade and Benningfield") %>%
+  kestrel_plot_chicks_per_year(region = "Jere Schade and Steve Benningfield in Bucks County, PA") +
+  theme(legend.position = "none") +
+  ggtitle("Jere Schade and Steve Benningfield in Bucks County, PA")
+save_ggplot("pa_schade_benningfield_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
 
 
 # ***************************************************************************
@@ -382,7 +402,8 @@ ct_nestboxes_clean %>%
   left_join(ct_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
   kestrel_plot_cumulative(region = "Connecticut")
-save_ggplot("ct_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
+save_ggplot("ct_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, 
+            height = h_cum, units = "in")
 
 
 # chicks per box ------------------------------------------------------
@@ -433,7 +454,8 @@ me_nestboxes_clean %>%
   left_join(me_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
   kestrel_plot_cumulative(region = "Maine")
-save_ggplot("me_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, height = h, units = "in")
+save_ggplot("me_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, 
+            height = h_cum, units = "in")
 
 
 # chicks per box ------------------------------------------------------
