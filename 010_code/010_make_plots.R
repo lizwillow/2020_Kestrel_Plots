@@ -316,10 +316,10 @@ pa_nestboxes_clean %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
   kestrel_plot_chicks_per_box(region = "McKelvie") +
   labs(caption = wrapper("Note: Prior to 2018 we were not putting enough chips on the bottom of the boxes, or were putting chips in too early in the year. Sometimes this resulted in starlings removing much of the chip layer before kestrels took up residence, and the kestrel eggs were laid on a very thin chip layer, or even on bare wood. Beginning in 2018 we added a 3-4 inch layer of fresh chips to each box immediately prior to nesting season. This greatly reduced the number of box failures, as you can see from our data.",
-                         dev_scaler = 13)) +
+                         dev_scaler = 12)) +
   theme(legend.position = "none") +
   ggtitle("McKelvie kestrel nest box program")
-save_ggplot("pa_mckelvie_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
+save_ggplot("pa_mckelvie_chicks_per_nested_box.png", rfile, v, width = w, height = h, units = "in")
 
 # total chicks from McKelvie
 pa_nestboxes_clean %>%

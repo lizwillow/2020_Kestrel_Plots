@@ -95,7 +95,7 @@ kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4) {
           plot.subtitle = element_text(hjust = 0.5, size=11),
           text = element_text(size=14)) +
     ggtitle(paste(region, "kestrel nest box programs")) +
-    labs(subtitle = "Average number of banding-age chicks per nested box (Failures are entered as zeroes)") +
+    labs(subtitle = "Average number of banding-age chicks per nested box (failures are entered as zeroes)") +
     scale_x_date(date_breaks = "1 year", date_labels = "%Y",
                  minor_breaks = NULL) +
     scale_y_continuous(limits = c(0, NA))
