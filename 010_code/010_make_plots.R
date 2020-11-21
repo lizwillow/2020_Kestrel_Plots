@@ -52,9 +52,9 @@ source(here::here(paste0(v, "_code"),paste0(v, "_functions.R")))
 new_rfiles(rfile, v)
 
 # height and width of plots
-w = 8
-h = 5
-h_cum = 7
+w = 9
+h = 6
+h_cum = 10
 
 # *************************************************************************
 # *** New York ------------------------------------------------------------
@@ -271,7 +271,8 @@ save_ggplot("pa_number_of_chicks.png", rfile, v, width = w, height = h, units = 
 
 # by organization
 pa_nestboxes_clean %>%
-  kestrel_plot_chicks_per_year(region = "Pennsylvania", combined = FALSE)
+  kestrel_plot_chicks_per_year(region = "Pennsylvania", combined = FALSE) +
+  guides(col = guide_legend(nrow = 3))
 save_ggplot("pa_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
 # cumulative plot using geom_area
@@ -279,7 +280,8 @@ pa_nestboxes_clean %>%
   expand(year, org) %>%
   left_join(pa_nestboxes_clean) %>%
   replace(is.na(.), 0) %>%
-  kestrel_plot_cumulative(region = "Pennsylvania")
+  kestrel_plot_cumulative(region = "Pennsylvania") +
+  guides(fill = guide_legend(nrow = 3))
 save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, 
             height = h_cum, units = "in")
 
@@ -456,15 +458,6 @@ me_nestboxes_clean %>%
   kestrel_plot_cumulative(region = "Maine")
 save_ggplot("me_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, 
             height = h_cum, units = "in")
-
-
-# chicks per box ------------------------------------------------------
-
-# by org
-me_nestboxes_clean %>%
-  dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
-  kestrel_plot_chicks_per_box(region = "Maine")
-save_ggplot("me_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
 
 
 
