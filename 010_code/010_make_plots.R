@@ -290,13 +290,15 @@ save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w,
 
 # by org
 pa_nestboxes_clean %>%
+  na.omit() %>%
   dplyr::mutate(org = replace(
     org,
     org == "Devich Farbotnik in Bucks County, PA",
     "Farbotnik"
   )) %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
-  kestrel_plot_chicks_per_box(region = "Pennsylvania")
+  kestrel_plot_chicks_per_box(region = "Pennsylvania") +
+  guides(col = guide_legend(nrow = 3))
 save_ggplot("pa_chicks_per_nested_box.png", rfile, v, width = 7, height = h, units = "in")
 
 
