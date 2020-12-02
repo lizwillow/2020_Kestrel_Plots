@@ -11,7 +11,7 @@ kestrel_plot_cumulative <- function(df, region) {
     ggplot() +
     theme_minimal() +
     geom_area(aes(x=year, y=chicks_banded, fill=org),
-              alpha=0.6 , size=.5, colour="black") +
+              alpha=1 , size=.5, colour="black") +
     #scale_fill_viridis(discrete = T) +
     ggtitle(paste(region, "kestrel nest box programs")) +
     labs(subtitle = "Number of banding-age kestrel chicks per year") +

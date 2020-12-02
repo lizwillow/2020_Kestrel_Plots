@@ -50,14 +50,19 @@ pal.bands(coolwarm, parula, ocean.haline, brewer.blues, cubicl, kovesi.rainbow, 
 labs=c('alphabet','alphabet2', 'glasbey','kelly','polychrome', 'stepped', 'stepped2', 'stepped3', 'tol', 'watlington')
 op=par(mar=c(0,5,3,1))
 pal.bands(alphabet(), alphabet2(), glasbey(), kelly(),
-          polychrome(), stepped(), stepped2(), stepped3(), tol(), watlington(), labels=labs, show.names=FALSE)
+          polychrome(), stepped(), stepped2(), stepped3(), tol(), watlington(),
+          labels=labs, show.names=FALSE)
 pal10 <- watlington(11)[c(1:7,9:11)]
 scales::show_col(pal10)
 gg_color <- function(n) {
   hues = seq(15, 375, length = n + 1)
   hcl(h = hues, l = 65, c = 100)[1:n]
 }
-
+# RColorBrewer
+library(RColorBrewer)
+RColorBrewer::display.brewer.all()
+display.brewer.pal(10, "Paired")
+pal_paired_10 <- brewer.pal(10, "Paired")
 
 # other libraries
 library(gridExtra)
@@ -277,7 +282,7 @@ pa_nestboxes_clean %>%
   guides(col = guide_legend(nrow = 3)) +
   labs(caption = "* indicates incomplete data") + 
   theme(plot.caption = element_text(size = 10, face = "italic")) +
-  scale_color_manual(values = cols)
+  scale_color_manual(values = pal_paired_10)
 save_ggplot("pa_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
 # no numbers and label end of line
@@ -291,7 +296,7 @@ pa_nestboxes_clean %>%
   theme(plot.caption = element_text(size = 10, face = "italic"))
 save_ggplot("pa_labeled_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
-# cumulative plot using geom_area
+# cumulative plot using geom_area - paired palette
 pa_nestboxes_clean %>%
   expand(year, org) %>%
   left_join(pa_nestboxes_clean) %>%
@@ -300,10 +305,24 @@ pa_nestboxes_clean %>%
   kestrel_plot_cumulative(region = "Pennsylvania") +
   guides(fill = guide_legend(nrow = 3)) +
   labs(caption = "* incomplete data for Karner in 2015, 2017, and 2018") + 
-  theme(plot.caption = element_text(size = 10, face = "italic"))
+  theme(plot.caption = element_text(size = 10, face = "italic")) +
+  scale_fill_manual(values = pal_paired_10)
 save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, 
             height = h_cum, units = "in")
 
+# cumulative plot using geom_area - 
+pa_nestboxes_clean %>%
+  expand(year, org) %>%
+  left_join(pa_nestboxes_clean) %>%
+  replace_na(list(chicks_banded = 0, 
+                  chicks_per_box = 0)) %>%
+  kestrel_plot_cumulative(region = "Pennsylvania") +
+  guides(fill = guide_legend(nrow = 3)) +
+  labs(caption = "* incomplete data for Karner in 2015, 2017, and 2018") + 
+  theme(plot.caption = element_text(size = 10, face = "italic")) +
+  scale_fill_manual(values = c('#a9a9a9', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#42d4f4', '#f032e6', '#fabed4', '#9A6324', '#000000'))
+save_ggplot("pa_number_of_chicks_by_org_cumulative_pal2.png", rfile, v, width = w, 
+            height = h_cum, units = "in")
 
 # chicks per box ------------------------------------------------------
 
