@@ -6,12 +6,12 @@ wrapper <- function(label, dev_width = dev.size("in")[1], dev_scaler = 12)  {
 
 
 # cumulative plot
-kestrel_plot_cumulative <- function(df, region) {
+kestrel_plot_cumulative <- function(df, region, border = "black") {
   df %>%
     ggplot() +
     theme_minimal() +
     geom_area(aes(x=year, y=chicks_banded, fill=org),
-              alpha=1 , size=.5, colour="black") +
+              alpha=1 , size=.5, color = border) +
     #scale_fill_viridis(discrete = T) +
     ggtitle(paste(region, "kestrel nest box programs")) +
     labs(subtitle = "Number of banding-age kestrel chicks per year") +
@@ -33,8 +33,8 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
   if (missing(cols)) {
     cols = gg_color(length(unique(df$org)))
   }
-  label_col = enquo(label_col)
   if (combined == FALSE) {
+    label_col = enquo(label_col)
     if (labels_as_points == TRUE) {
       df %>% ggplot() +
         theme_minimal() +
@@ -88,6 +88,11 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
     }
     
   } else {
+    if (missing(label_col)) {
+      stop("label_col is missing.")
+    } else {
+      label_col = enquo(label_col)
+    }
     df %>% ggplot() +
       geom_line(aes(x = year, y = sum_chicks_banded_per_year), color="#69b3a2", alpha = 0.5,
                 size = 1) +
@@ -106,7 +111,7 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
             plot.subtitle = element_text(hjust = 0.5),
             text = element_text(size=14)) +
       ggrepel::geom_text_repel(aes(x = year, y = sum_chicks_banded_per_year,
-                    label=sum_chicks_banded_per_year),
+                    label=!!label_col),
                 hjust=.5, vjust=2, size = 4)
   }
   
