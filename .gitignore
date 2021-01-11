@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
+010_plots/.DS_Store
