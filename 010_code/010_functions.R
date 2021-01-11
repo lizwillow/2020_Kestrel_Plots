@@ -30,6 +30,9 @@ kestrel_plot_cumulative <- function(df, region, border = "black") {
 # total num chicks by org
 kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as_points = FALSE, 
                                          label_col = chicks_banded, cols) {
+  # remove duplicate labels
+  label_col_deparse <- deparse(substitute(label_col))
+  df[[label_col_deparse]][duplicated(cbind(df[[label_col_deparse]], df$year))] <- NA
   if (missing(cols)) {
     cols = gg_color(length(unique(df$org)))
   }
@@ -42,7 +45,8 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
                   alpha=0.6 , size=.5) +
         # geom_point(aes(x = year, y = chicks_banded, col=org), size = 3) +
         geom_label(aes(x = year, y = chicks_banded, col=org,
-                       label = !!label_col), size = 3) +
+                       label = !!label_col), size = 3,
+                   stat = 'identity') +
         scale_color_manual(values = cols) +
         # scale_color_viridis(discrete = T, end = 0.9) +
         ggtitle(paste(region, "kestrel nest box programs")) +
@@ -120,6 +124,10 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
 
 
 kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4) {
+  # remove duplicate labels
+  df$label <- df$chicks_per_box
+  df$label[duplicated(cbind(df$chicks_per_box, df$year))] <- NA
+  # plot
   df %>% ggplot() +
     geom_line(aes(x = year, y = chicks_per_box, color = org), 
               alpha = 0.5,
@@ -127,7 +135,7 @@ kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4) {
     geom_point(aes(x = year, y = chicks_per_box, color = org), 
                size = 3) +
     ggrepel::geom_text_repel(aes(x = year, y = chicks_per_box,
-                                 label=chicks_per_box),
+                                 label=label),
                              vjust=2, size = text_repel_size) +
     theme_minimal() + 
     theme(axis.title = element_blank(),
