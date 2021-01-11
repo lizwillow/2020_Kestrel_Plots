@@ -322,7 +322,8 @@ save_ggplot("pa_number_of_chicks_by_org_cumulative.png", rfile, v, width = w,
 
 # just the legend ---------------------------------------------------------
 
-names(pa_pal) <- levels(pa_nestboxes_clean$org_key)
+pa_pal_legend <- pa_pal
+names(pa_pal_legend) <- levels(pa_nestboxes_clean$org_key)
 
 # get plot for legend
 p_legend <- pa_nestboxes_clean %>%
@@ -330,7 +331,7 @@ p_legend <- pa_nestboxes_clean %>%
   theme_minimal() +
   geom_area(aes(x=year, y=chicks_banded, fill=org_key),
             alpha=1 , size=.5) +
-  scale_fill_manual(values = pa_pal,
+  scale_fill_manual(values = pa_pal_legend,
                     labels = function(x) str_wrap(x, width = 100)) + 
   guides(fill = guide_legend(ncol = 1)) +
   labs(fill = "Key")
