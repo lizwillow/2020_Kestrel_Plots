@@ -31,13 +31,14 @@ kestrel_plot_cumulative <- function(df, region, border = "black") {
 kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as_points = FALSE, 
                                          label_col = chicks_banded, cols) {
   # remove duplicate labels
+
   label_col_deparse <- deparse(substitute(label_col))
-  df[[label_col_deparse]][duplicated(cbind(df[[label_col_deparse]], df$year))] <- NA
+  df$label <- df[[label_col_deparse]]
+  df$label[duplicated(cbind(df$label, df$year))] <- NA
   if (missing(cols)) {
     cols = gg_color(length(unique(df$org)))
   }
   if (combined == FALSE) {
-    label_col = enquo(label_col)
     if (labels_as_points == TRUE) {
       df %>% ggplot() +
         theme_minimal() +
@@ -45,7 +46,7 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
                   alpha=0.6 , size=.5) +
         # geom_point(aes(x = year, y = chicks_banded, col=org), size = 3) +
         geom_label(aes(x = year, y = chicks_banded, col=org,
-                       label = !!label_col), size = 3,
+                       label = label), size = 3,
                    stat = 'identity') +
         scale_color_manual(values = cols) +
         # scale_color_viridis(discrete = T, end = 0.9) +
@@ -87,7 +88,7 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
               plot.subtitle = element_text(hjust = 0.5),
               text = element_text(size=14)) +
         ggrepel::geom_text_repel(aes(x = year, y = chicks_banded,
-                                   label=!!label_col),
+                                   label=label),
                                hjust=.5, vjust=2, size = 4)
     }
     
@@ -130,8 +131,7 @@ kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4) {
   # plot
   df %>% ggplot() +
     geom_line(aes(x = year, y = chicks_per_box, color = org), 
-              alpha = 0.5,
-              size = 1) +
+              alpha = 0.5, size=.5) +
     geom_point(aes(x = year, y = chicks_per_box, color = org), 
                size = 3) +
     ggrepel::geom_text_repel(aes(x = year, y = chicks_per_box,

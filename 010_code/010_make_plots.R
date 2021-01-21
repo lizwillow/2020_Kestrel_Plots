@@ -275,6 +275,7 @@ pa_nestboxes_clean %>%
   dplyr::group_by(year) %>%
   dplyr::summarise(sum_chicks_banded_per_year = sum(chicks_banded)) %>%
   dplyr::ungroup() %>%
+  dplyr::filter(sum_chicks_banded_per_year != 0) %>%
   kestrel_plot_chicks_per_year(region = "Pennsylvania", combined = TRUE,
                                label_col = sum_chicks_banded_per_year)
 save_ggplot("pa_number_of_chicks.png", rfile, v, width = w, height = h, units = "in")
@@ -341,7 +342,10 @@ legend <- cowplot::get_legend(p_legend)
 
 grid.newpage()
 grid.draw(legend)
-save_ggplot("key.png", rfile=rfile, v=v)
+
+# Save as 3x6.5 pdf using the dropdown menu.
+# Otherwise if you use save_ggplot as below it won't be just the legend.
+# save_ggplot("key.pdf", rfile=rfile, v=v)
 
 # chicks per box ------------------------------------------------------
 
@@ -422,6 +426,7 @@ save_ggplot("pa_schade_benningfield_number_of_chicks.png", rfile, v, width = w, 
 # *** Connecticut ------------------------------------------------------------
 # ***************************************************************************
 
+
 # clean data --------------------------------------------------------------
 
 ct_nestboxes_clean <- ct_nestboxes %>%
@@ -433,8 +438,12 @@ ct_nestboxes_clean <- ct_nestboxes %>%
                 year = zoo::as.Date.yearmon(year),
                 chicks_per_box = parse_number(chicks_per_box),
                 chicks_banded = parse_number(chicks_banded),
-                org = "Sayers")
+                org = as.factor(org))
 
+# color palette -----------------------------------------------------------
+
+ct_pal <- c(gg_color(2))
+names(ct_pal) <- levels(ct_nestboxes_clean$org)
 
 # chicks per year -----------------------------------------------------
 
@@ -449,7 +458,8 @@ save_ggplot("ct_number_of_chicks.png", rfile, v) #, width = w, height = h, units
 # by organization
 ct_nestboxes_clean %>%
   kestrel_plot_chicks_per_year(region = "Connecticut", combined = FALSE) +
-  theme(legend.position = "right")
+  theme(legend.position = "right") +
+  scale_color_manual(values = ct_pal)
 save_ggplot("ct_number_of_chicks_by_org.png", rfile, v) #, width = w, height = h, units = "in"
 
 # cumulative plot using geom_area
@@ -457,7 +467,8 @@ ct_nestboxes_clean %>%
   # expand(year, org) %>%
   # left_join(ct_nestboxes_clean) %>%
   # replace(is.na(.), 0) %>%
-  kestrel_plot_cumulative(region = "Connecticut")
+  kestrel_plot_cumulative(region = "Connecticut") +
+  scale_color_manual(values = ct_pal)
 save_ggplot("ct_number_of_chicks_by_org_cumulative.png", rfile, v, width = w, 
             height = h_cum, units = "in")
 
@@ -466,9 +477,12 @@ save_ggplot("ct_number_of_chicks_by_org_cumulative.png", rfile, v, width = w,
 
 # by org
 ct_nestboxes_clean %>%
+  na.omit(chicks_per_box) %>%
   dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1)) %>%
   kestrel_plot_chicks_per_box(region = "Connecticut") +
-  theme(legend.position = "right")
+  theme(legend.position = "right") +
+  expand_limits(y=1.7) +
+  scale_color_manual(values = ct_pal)
 save_ggplot("ct_chicks_per_nested_box.png", rfile, v) #, width = 7, height = h, units = "in"
 
 
@@ -592,7 +606,7 @@ va_nestboxes_clean <- va_nestboxes %>%
 va_nestboxes_clean %>%
   dplyr::group_by(year) %>%
   dplyr::summarise(sum_chicks_banded_per_year = sum(chicks_banded)) %>%
-  dplyr::mutate(lab = c("316","393","283*","194")) %>%
+  #dplyr::mutate(lab = c("316","393","283*","194")) %>%
   kestrel_plot_chicks_per_year(region = "Virginia", combined = TRUE, label_col = lab) +
   labs(caption = "* Incomplete data for 2019") +
   theme(plot.caption = element_text(size = 10, face = "italic"))
@@ -600,8 +614,10 @@ save_ggplot("va_number_of_chicks.png", rfile, v, width = w, height = h, units = 
 
 # by organization
 va_nestboxes_clean %>%
-  dplyr::filter(chicks_banded != 0) %>%
-  kestrel_plot_chicks_per_year(region = "Virginia", combined = FALSE)
+  kestrel_plot_chicks_per_year(region = "Virginia", combined = FALSE,
+                               label_col = label_chicks_banded) +
+  labs(caption = "* Reum notes count as a conservative estimate") +
+  theme(plot.caption = element_text(size = 10, face = "italic"))
 save_ggplot("va_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
 # cumulative plot using geom_area
