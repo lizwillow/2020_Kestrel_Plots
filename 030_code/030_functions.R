@@ -124,30 +124,65 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
 
 
 
-kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4) {
+kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4, se = FALSE) {
   # remove duplicate labels
   df$label <- df$chicks_per_box
   df$label[duplicated(cbind(df$chicks_per_box, df$year))] <- NA
   # plot
-  df %>% ggplot() +
-    geom_line(aes(x = year, y = chicks_per_box, color = org), 
-              alpha = 0.5, size=1) +
-    geom_point(aes(x = year, y = chicks_per_box, color = org), 
-               size = 3) +
-    ggrepel::geom_text_repel(aes(x = year, y = chicks_per_box,
-                                 label=label),
-                             vjust=2, size = text_repel_size) +
-    theme_minimal() + 
-    theme(axis.title = element_blank(),
-          axis.text.x=element_text(angle=60, hjust=1),
-          legend.title = element_blank(),
-          legend.position = "bottom",
-          ## center titles and make main title bold:
-          plot.title = element_text(hjust = 0.5, face="bold"),
-          plot.subtitle = element_text(hjust = 0.5, size=11),
-          text = element_text(size=14)) +
-    ggtitle(paste(region, "kestrel nest box programs")) +
-    labs(subtitle = "Average number of banding-age chicks per nested box (failures are entered as zeroes)") +
-    scale_x_date(date_breaks = "1 year", date_labels = "%Y",
-                 minor_breaks = NULL)
+  if(se == TRUE) {
+    df %>% ggplot()+
+      geom_errorbar(aes(ymin=chicks_per_box-se_chicks_per_box,
+                        ymax=chicks_per_box+se_chicks_per_box,
+                        x = year,
+                        y = chicks_per_box,
+                        col = org),
+                    width = 50,
+                    alpha = 0.5, 
+                    size=.7,
+                    position = position_dodge(0.5))  +
+      geom_line(aes(x = year, y = chicks_per_box, color = org), 
+                alpha = 0.5, size=1) +
+      geom_point(aes(x = year, y = chicks_per_box, color = org), 
+                 size = 3, position = position_dodge(width = 0.5)) +
+      ggrepel::geom_text_repel(aes(x = year, y = chicks_per_box,
+                                   label=label),
+                               hjust = -0.4, size = text_repel_size, 
+                position = position_dodge(width=30)) +
+      theme_minimal() + 
+      theme(axis.title = element_blank(),
+            axis.text.x=element_text(angle=60, hjust=1),
+            legend.title = element_blank(),
+            legend.position = "bottom",
+            ## center titles and make main title bold:
+            plot.title = element_text(hjust = 0.5, face="bold"),
+            plot.subtitle = element_text(hjust = 0.5, size=11),
+            text = element_text(size=14)) +
+      ggtitle(paste(region, "kestrel nest box programs")) +
+      labs(subtitle = "Average number of banding-age chicks per nested box (failures are entered as zeroes)") +
+      scale_x_date(date_breaks = "1 year", date_labels = "%Y",
+                   minor_breaks = NULL)
+  } else {
+    df %>% ggplot() +
+      geom_line(aes(x = year, y = chicks_per_box, color = org), 
+                alpha = 0.5, size=1) +
+      geom_point(aes(x = year, y = chicks_per_box, color = org), 
+                 size = 3) +
+      ggrepel::geom_text_repel(aes(x = year, y = chicks_per_box,
+                                   label=label),
+                               vjust=2, size = text_repel_size) +
+      theme_minimal() + 
+      theme(axis.title = element_blank(),
+            axis.text.x=element_text(angle=60, hjust=1),
+            legend.title = element_blank(),
+            legend.position = "bottom",
+            ## center titles and make main title bold:
+            plot.title = element_text(hjust = 0.5, face="bold"),
+            plot.subtitle = element_text(hjust = 0.5, size=11),
+            text = element_text(size=14)) +
+      ggtitle(paste(region, "kestrel nest box programs")) +
+      labs(subtitle = "Average number of banding-age chicks per nested box (failures are entered as zeroes)") +
+      scale_x_date(date_breaks = "1 year", date_labels = "%Y",
+                   minor_breaks = NULL)
+  }
+  
 }

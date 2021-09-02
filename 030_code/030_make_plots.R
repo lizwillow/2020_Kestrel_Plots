@@ -118,36 +118,49 @@ save_ggplot("pa_nj_chicks_per_nested_box.png", rfile, v, width = w, height = h, 
 
 
 # ***************************************************************************
-# Calculate standard errors -----------------------------------------------
+# *** Calculate standard errors -----------------------------------------------
 # ***************************************************************************
 
 # Start by loading data ---------------------------------------------------
 
-pa_nj_2018 <- read_excel(here::here(paste0("020_data"),
-                                    "2018_PA_NJ_boxes.xlsx")) %>%
+pa_2018 <- read_excel(here::here(paste0("020_data"),
+                                    "2018_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  tidyr::fill(year, nestbox_id, number_young_banded, 
-              state, banding_date, .direction = "down") %>%
-  dplyr::rename(band_number = band_number_1783) %>% 
+  tidyr::fill(pa_year, nestbox_id, number_young_banded, 
+              banding_date, .direction = "down") %>%
+  dplyr::rename(year = pa_year) %>% 
   rowwise() %>% 
-  dplyr::mutate(total_young = sum(number_young_banded, number_unbanded_young_to_12_day_banding_age, na.rm=TRUE)) %>% 
+  dplyr::mutate(total_young = number_young_banded,
+                state = "PA") %>% 
   # distinct will take only the first row with each unique combination
   dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
-# ^ but no zeroes in this data so can't use
-nj_2019 <- read_excel(here::here(paste0("020_data"),
-                                 "2019_NJ_boxes.xlsx")) %>%
+nj_2018 <- read_excel(here::here(paste0("020_data"),
+                                 "2018_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  tidyr::fill(year, date_1st_observed, nestbox_id, number_young_banded, 
-              state, banding_date, .direction = "down") %>%
+  tidyr::fill(year, nestbox_id, number_young_banded, 
+              banding_date, .direction = "down") %>%
+  rowwise() %>% 
+  dplyr::mutate(total_young = number_young_banded,
+                state = "NJ") %>% 
+  # distinct will take only the first row with each unique combination
+  dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
+  dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
+nj_2019 <- read_excel(here::here(paste0("020_data"),
+                                 "2019_NJ_chicks.xlsx")) %>%
+  janitor::clean_names() %>%
+  tidyr::fill(date_1st_observed, nestbox_id, number_young_banded, 
+              banding_date, .direction = "down") %>%
   dplyr::rename(band_number = band_number_1892) %>% 
   rowwise() %>% 
-  dplyr::mutate(total_young = sum(number_young_banded, number_unbanded_young_to_12_day_banding_age, na.rm=TRUE)) %>% 
+  dplyr::mutate(total_young = number_young_banded,
+                year = 2019,
+                state = "NJ") %>% 
   # distinct will take only the first row with each unique combination
   dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
 pa_2019 <- read_excel(here::here(paste0("020_data"),
-                                 "2019_PA_boxes.xlsx")) %>%
+                                 "2019_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   tidyr::fill(year, date_1st_observed, nestbox_id, number_young_banded, 
               state, banding_date, status, .direction = "down") %>%
@@ -160,7 +173,7 @@ pa_2019 <- read_excel(here::here(paste0("020_data"),
   dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
 nj_2020 <- read_excel(here::here(paste0("020_data"),
-                                 "2020_NJ_boxes.xlsx")) %>%
+                                 "2020_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   dplyr::rename(nestbox_id = x2020_nestbox_id,
                 band_number = band_number_1893) %>%
@@ -173,7 +186,7 @@ nj_2020 <- read_excel(here::here(paste0("020_data"),
   dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
 pa_2020 <- read_excel(here::here(paste0("020_data"),
-                                 "2020_PA_boxes.xlsx")) %>%
+                                 "2020_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   dplyr::rename(band_number = band_number_1893,
                 date_1st_observed = date_1st_observed_as_active) %>%
@@ -188,7 +201,7 @@ pa_2020 <- read_excel(here::here(paste0("020_data"),
   dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
 pa_2021 <- read_excel(here::here(paste0("020_data"),
-                                 "2021_PA_boxes.xlsx")) %>%
+                                 "2021_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   dplyr::rename(band_number = band_number_1893,
                 date_1st_observed = date_1st_observed_as_active) %>%
@@ -212,7 +225,7 @@ pa_2021 <- read_excel(here::here(paste0("020_data"),
   dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
 nj_2021 <- read_excel(here::here(paste0("020_data"),
-                                 "2021_NJ_boxes.xlsx")) %>%
+                                 "2021_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   dplyr::rename(weight_in_grams = weightin_grams) %>%
   tidyr::fill(nestbox_id, number_young_banded,
@@ -225,20 +238,62 @@ nj_2021 <- read_excel(here::here(paste0("020_data"),
   dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
 # combine
-combined <- dplyr::bind_rows(pa_nj_2018, nj_2019, nj_2020, nj_2021, pa_2019, pa_2020, pa_2021) %>% 
+combined <- dplyr::bind_rows(nj_2018, nj_2019, nj_2020, nj_2021, pa_2018, pa_2019, pa_2020, pa_2021) %>% 
   arrange(state, year)
 combined_summary <- combined %>% 
   dplyr::group_by(state, year) %>% 
-  dplyr::summarise(mean_chicks_per_box = mean(total_young),
+  dplyr::summarise(n_boxes = n(),
+                   mean_chicks_per_box = mean(total_young),
                    sum_chicks_banded = sum(number_young_banded),
                    sd_chicks_per_box = sd(total_young),
                    se_chicks_per_box = sd(total_young)/sqrt(n()),
                    med_cpb = median(total_young),
                    q1_cpb = quantile(total_young, 0.25),
                    q3_cpb = quantile(total_young, 0.75))
+# ***************************************************************************
+# *** Plots with SE ---------------------------------------------------------
+# ***************************************************************************
+
+# clean up summary data with SEs
+se_clean <- combined_summary %>%
+  dplyr::mutate(year = as.numeric(year),
+                year = zoo::as.Date.yearmon(year)) %>%
+  dplyr::mutate(chicks_per_box = round(mean_chicks_per_box, digits = 2),
+                org = ifelse(
+                  state == "PA",
+                  "Central PA Conservancy",
+                  "Natural Lands"
+                ))
+
+# chicks per box ------------------------------------------------------
+
+# all years
+nestboxes_clean %>%
+  dplyr::filter(chicks_per_box != 0) %>%
+  drop_na(chicks_per_box) %>%
+  dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1),
+                year_value = lubridate::year(year)) %>%
+  dplyr::full_join(dplyr::select(se_clean, se_chicks_per_box, year, org),
+                   by = c("year","org")) %>% 
+  kestrel_plot_chicks_per_box(region = "Pennsylvania and New Jersey", se = TRUE) +
+  scale_color_manual(values = c("#FF8F99", "#3A8E4E")) +
+  expand_limits(y = 2.9) +
+  labs(caption = paste0("Error bars from 2018 to 2021 indicate ±1 standard error."))
+save_ggplot("pa_nj_chicks_per_nested_box_se_allyears.png", rfile, v, width = w, height = h, units = "in")
+
+
+# by org with SE
+se_clean %>%
+  kestrel_plot_chicks_per_box(region = "Pennsylvania and New Jersey",
+                              se = TRUE) +
+  scale_color_manual(values = c("#FF8F99", "#3A8E4E")) +
+  expand_limits(y = 2.9, x = as.Date("2021-02-05")) +
+  labs(caption = paste0("Error bars indicate ±1 standard error."))
+save_ggplot("pa_nj_chicks_per_nested_box_se.png", rfile, v, width = w, height = h, units = "in")
+
 
 # ***************************************************************************
-# Try boxplots ---------------------------------------------------------
+# *** Try boxplots ---------------------------------------------------------
 # ***************************************************************************
 
 # chicks per box with boxplots ------------------------------------------------------
