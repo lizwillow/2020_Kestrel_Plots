@@ -93,12 +93,21 @@ pa_2021 <- read_excel(here::here(paste0(v, "_data"),
               status, .direction = "down") %>%
   dplyr::mutate(state = "PA",
                 band_number = as.numeric(band_number))
+nj_2021 <- read_excel(here::here(paste0(v, "_data"),
+                                 "2021_NJ_boxes.xlsx")) %>%
+  janitor::clean_names() %>%
+  drop_na(weightin_grams) %>% # remove those whose weight was not recorded
+  dplyr::rename(weight_in_grams = weightin_grams) %>%
+  tidyr::fill(nestbox_id, number_young_banded,
+              status, .direction = "down") %>%
+  dplyr::mutate(state = "NJ",
+                band_number = as.numeric(band_number))
 
 # combine data ------------------------------------------------------------
 # remove unknown sex
 
 big_df <- dplyr::bind_rows(
-  pa_nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021
+  pa_nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021
 ) %>%
   dplyr::filter(sex %in% c("m","f")) %>%
   # yday_born doesn't work for 2021 since no banding dates
@@ -107,8 +116,8 @@ big_df <- dplyr::bind_rows(
 
 # plot weight vs age by sex -------------------------------------------------------
 
-# individual chicks (better than box means I think)
-big_df %>%
+# individual chicks
+p <- big_df %>%
   ggplot(aes(x = age_in_days,
              y = weight_in_grams,
              col = sex)) +
@@ -125,7 +134,34 @@ big_df %>%
        color = "Sex") +
   theme(legend.position = "bottom") +
   scale_x_continuous(breaks=seq(14,28,2))
-save_ggplot("wva_by_gender.png", rfile=rfile, v=v)
+p
+save_ggplot("w_by_gender.png", rfile=rfile, v=v)
+
+# marginals
+ggExtra::ggMarginal(p,type="boxplot", groupFill = TRUE)
+ggExtra::ggMarginal(p,type="density", groupFill = TRUE)
+
+# individual chicks faceted by year
+p <- big_df %>%
+  ggplot(aes(x = age_in_days,
+             y = weight_in_grams,
+             col = sex)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(se = TRUE, level = 0.95,
+              method = "gam", formula = y ~ s(x, bs = "cs")) +
+  scale_color_manual(values = c("chocolate1", "darkblue")) +
+  geom_hline(yintercept = 108, linetype='dashed', color = "darkblue") +
+  geom_hline(yintercept = 116, linetype='dashed', color = "chocolate1") +
+  labs(x= "Age (days)",
+       y = "Weight (grams)",
+       title = paste0(nrow(big_df), " kestrel chicks in PA and NJ, 2018-2021"),
+       caption = "Dotted lines represent average weight from data provided by BBL for banded adults in PA and NJ from 2018 to 2020",
+       color = "Sex") +
+  theme(legend.position = "bottom") +
+  scale_x_continuous(breaks=seq(14,28,2)) +
+  facet_wrap(~ year)
+p
+save_ggplot("w_by_gender_by_year.png", rfile=rfile, v=v)
   
 # box means
 # big_df %>%

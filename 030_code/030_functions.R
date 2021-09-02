@@ -69,7 +69,7 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
       df %>% ggplot() +
         theme_minimal() +
         geom_line(aes(x=year, y=chicks_banded, col=org),
-                  alpha=0.6 , size=.5) +
+                  alpha=0.6 , size=1) +
         geom_point(aes(x = year, y = chicks_banded, col=org), size = 3) +
         # geom_label(aes(x = year, y = chicks_banded, col=org,
         #                label = chicks_banded), size = 3) +
@@ -131,7 +131,7 @@ kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4) {
   # plot
   df %>% ggplot() +
     geom_line(aes(x = year, y = chicks_per_box, color = org), 
-              alpha = 0.5, size=.5) +
+              alpha = 0.5, size=1) +
     geom_point(aes(x = year, y = chicks_per_box, color = org), 
                size = 3) +
     ggrepel::geom_text_repel(aes(x = year, y = chicks_per_box,
