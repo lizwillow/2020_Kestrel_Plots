@@ -48,14 +48,15 @@ pa_nj_2018 <- read_excel(here::here(paste0(v, "_data"),
               state, banding_date, .direction = "down") %>%
   dplyr::rename(band_number = band_number_1783)
 nj_2019 <- read_excel(here::here(paste0(v, "_data"),
-                                    "2019_NJ_boxes.xlsx")) %>%
+                                    "2019_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
   tidyr::fill(year, date_1st_observed, nestbox_id, number_young_banded, 
-              state, banding_date, .direction = "down") %>%
-  dplyr::rename(band_number = band_number_1892)
+              banding_date, .direction = "down") %>%
+  dplyr::rename(band_number = band_number_1892) %>%
+  dplyr::mutate(state = "NJ")
 pa_2019 <- read_excel(here::here(paste0(v, "_data"),
-                                 "2019_PA_boxes.xlsx")) %>%
+                                 "2019_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
   tidyr::fill(year, date_1st_observed, nestbox_id, number_young_banded, 
@@ -64,7 +65,7 @@ pa_2019 <- read_excel(here::here(paste0(v, "_data"),
   dplyr::select(-c("x14","x15")) %>%
   dplyr::mutate(state = "PA")
 nj_2020 <- read_excel(here::here(paste0(v, "_data"),
-                                 "2020_NJ_boxes.xlsx")) %>%
+                                 "2020_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
   dplyr::rename(nestbox_id = x2020_nestbox_id,
@@ -73,18 +74,18 @@ nj_2020 <- read_excel(here::here(paste0(v, "_data"),
               state, banding_date, status, .direction = "down") %>%
   dplyr::mutate(year = 2020)
 pa_2020 <- read_excel(here::here(paste0(v, "_data"),
-                                 "2020_PA_boxes.xlsx")) %>%
+                                 "2020_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
   dplyr::rename(band_number = band_number_1893,
                 date_1st_observed = date_1st_observed_as_active) %>%
-  dplyr::select(-c("x14","x15")) %>%
+  dplyr::select(-c("x15")) %>%
   tidyr::fill(nestbox_id, number_young_banded, 
               banding_date, status, .direction = "down") %>%
   dplyr::mutate(state = "PA",
                 band_number = as.numeric(band_number))
 pa_2021 <- read_excel(here::here(paste0(v, "_data"),
-                                 "2021_PA_boxes.xlsx")) %>%
+                                 "2021_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
   dplyr::rename(band_number = band_number_1893,
@@ -94,7 +95,7 @@ pa_2021 <- read_excel(here::here(paste0(v, "_data"),
   dplyr::mutate(state = "PA",
                 band_number = as.numeric(band_number))
 nj_2021 <- read_excel(here::here(paste0(v, "_data"),
-                                 "2021_NJ_boxes.xlsx")) %>%
+                                 "2021_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weightin_grams) %>% # remove those whose weight was not recorded
   dplyr::rename(weight_in_grams = weightin_grams) %>%
@@ -334,6 +335,65 @@ visreg(fit3, "sex", gg = TRUE)
 visreg(fit3, "yday_born", gg = TRUE) 
 
 
+# plot weight vs age by sex FOR REGRESSION LESSON -------------------------------------------------------
 
+sub_df <- big_df %>%
+  dplyr::filter(age_in_days < 24) %>% 
+  dplyr::group_by(nestbox_id, banding_date) %>% 
+  dplyr::sample_n(1) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(age_in_days, weight_in_grams, sex) %>% 
+  dplyr::mutate(age_sq = age_in_days^2)
 
+save_rds(sub_df, v, rfile)
 
+p <- sub_df %>% 
+  ggplot(aes(x = age_in_days,
+             y = weight_in_grams,
+             col = sex)) +
+  geom_point(alpha = 0.4) + 
+  scale_color_manual(values = c("chocolate1", "darkblue")) +
+  labs(x= "Age (days)",
+       y = "Weight (grams)",
+       title = paste0(nrow(sub_df), " kestrel chicks in PA and NJ, 2018-2021"),
+       color = "Sex") +
+  theme(legend.position = "bottom") +
+  scale_x_continuous(breaks=seq(13,28,1))
+p
+save_ggplot("regression_example_1.png", rfile=rfile, v=v)
+
+# add regression lines
+fit <- lm(weight_in_grams~age_in_days+sex+age_sq, sub_df)
+new_df <- data.frame(age_in_days = 
+                   rep(seq(min(sub_df$age_in_days), 
+                           max(sub_df$age_in_days),
+                           length.out = 20),2),
+                 sex = rep(c("m","f"), each = 20),
+                 weight_in_grams = predict(fit,
+              newdata = data.frame(age_in_days = 
+                                     rep(seq(min(sub_df$age_in_days), 
+                                         max(sub_df$age_in_days),
+                                         length.out = 20),2),
+                                   sex = rep(c("m","f"), each = 20)) %>% 
+                dplyr::mutate(age_sq = age_in_days^2)))
+p <- sub_df %>% 
+  dplyr::rename(Sex = sex) %>% 
+  ggplot(aes(x = age_in_days,
+             y = weight_in_grams,
+             col = Sex)) +
+  geom_point(alpha = 0.4) + 
+  geom_line(aes(x = age_in_days,
+                y = weight_in_grams,
+                col = sex), data = new_df) +
+  #geom_smooth(method = "lm", alpha = .15, aes(fill = Sex)) +
+  scale_color_manual(values = c("chocolate1", "darkblue")) +
+  scale_fill_manual(values = c("chocolate1", "darkblue")) +
+  labs(x= "Age (days)",
+       y = "Weight (grams)",
+       title = paste0(nrow(sub_df), " kestrel chicks in PA and NJ, 2018-2021")) +
+  theme(legend.position = "bottom") +
+  scale_x_continuous(breaks=seq(13,28,1))
+p
+save_ggplot("regression_example_w_sq_lines.png", rfile=rfile, v=v)
+
+plot(fit)
