@@ -50,8 +50,8 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
                    stat = 'identity') +
         scale_color_manual(values = cols) +
         # scale_color_viridis(discrete = T, end = 0.9) +
-        ggtitle(paste(region, "kestrel nest box programs")) +
-        labs(subtitle = "Number of banding-age kestrel chicks per year") +
+        #ggtitle(paste(region, "kestrel nest box programs")) +
+        #labs(subtitle = "Number of banding-age kestrel chicks per year") +
         scale_x_date(date_breaks = "1 year", date_labels = "%Y",
                      minor_breaks = NULL) +
         theme(axis.text.x=element_text(angle=60, hjust=1),
@@ -70,13 +70,14 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
         theme_minimal() +
         geom_line(aes(x=year, y=chicks_banded, col=org),
                   alpha=0.6 , size=1) +
-        geom_point(aes(x = year, y = chicks_banded, col=org), size = 3) +
+        geom_point(aes(x = year, y = chicks_banded, col=org, 
+                       shape = org), size = 3) +
         # geom_label(aes(x = year, y = chicks_banded, col=org,
         #                label = chicks_banded), size = 3) +
         scale_color_manual(values = cols) +
         # scale_color_viridis(discrete = T, end = 0.9) +
-        ggtitle(paste(region, "kestrel nest box programs")) +
-        labs(subtitle = "Number of banding-age kestrel chicks per year") +
+        #ggtitle(paste(region, "kestrel nest box programs")) +
+        #labs(subtitle = "Number of banding-age kestrel chicks per year") +
         scale_x_date(date_breaks = "1 year", date_labels = "%Y",
                      minor_breaks = NULL) +
         theme(axis.text.x=element_text(angle=60, hjust=1),
@@ -87,9 +88,11 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
               plot.title = element_text(hjust = 0.5, face="bold"),
               plot.subtitle = element_text(hjust = 0.5),
               text = element_text(size=14)) +
-        ggrepel::geom_text_repel(aes(x = year, y = chicks_banded,
+        geom_text(aes(x = year, y = chicks_banded,
                                    label=label),
-                               hjust=.5, vjust=2, size = 4)
+                               #hjust=.5, 
+                  vjust=1.7, 
+                               size = 4)
     }
     
   } else {
@@ -125,9 +128,9 @@ kestrel_plot_chicks_per_year <- function(df, region, combined = FALSE, labels_as
 
 
 kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4, se = FALSE) {
+  df$label <- round(df$chicks_per_box, digits = 1)
   # remove duplicate labels
-  df$label <- df$chicks_per_box
-  df$label[duplicated(cbind(df$chicks_per_box, df$year))] <- NA
+  # df$label[duplicated(cbind(round(df$chicks_per_box, digits = 1), df$year))] <- NA
   # plot
   if(se == TRUE) {
     df %>% ggplot()+
@@ -142,12 +145,18 @@ kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4, se = FA
                     position = position_dodge(0.5))  +
       geom_line(aes(x = year, y = chicks_per_box, color = org), 
                 alpha = 0.5, size=1) +
-      geom_point(aes(x = year, y = chicks_per_box, color = org), 
+      geom_point(aes(x = year, y = chicks_per_box, color = org,
+                     shape = org), 
                  size = 3, position = position_dodge(width = 0.5)) +
       ggrepel::geom_text_repel(aes(x = year, y = chicks_per_box,
                                    label=label),
-                               hjust = -0.4, size = text_repel_size, 
+                               #hjust = -0.4, 
+                               size = text_repel_size,
                 position = position_dodge(width=30)) +
+      # geom_text(aes(x = year, y = chicks_per_box,
+      #                              label=label),
+      #           nudge_x =  -.07,
+      #           size = text_repel_size) +
       theme_minimal() + 
       theme(axis.title = element_blank(),
             axis.text.x=element_text(angle=60, hjust=1),
@@ -157,8 +166,8 @@ kestrel_plot_chicks_per_box <- function(df, region, text_repel_size = 4, se = FA
             plot.title = element_text(hjust = 0.5, face="bold"),
             plot.subtitle = element_text(hjust = 0.5, size=11),
             text = element_text(size=14)) +
-      ggtitle(paste(region, "kestrel nest box programs")) +
-      labs(subtitle = "Average number of banding-age chicks per nested box (failures are entered as zeroes)") +
+      #ggtitle(paste(region, "kestrel nest box programs")) +
+      #labs(subtitle = "Average number of banding-age chicks per nested box (failures are entered as zeroes)") +
       scale_x_date(date_breaks = "1 year", date_labels = "%Y",
                    minor_breaks = NULL)
   } else {

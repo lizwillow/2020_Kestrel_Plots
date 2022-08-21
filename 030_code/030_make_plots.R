@@ -39,8 +39,8 @@ pa_nestboxes <- read_excel(here::here(paste0(v, "_data"),
 
 # colors
 library(viridis)
-scales::show_col(watlington(16)) #look at colors
-watlington(16)
+scales::show_col(pals::watlington(16)) #look at colors
+pals::watlington(16)
 # CRAN version
 library(pals)
 pal.bands(coolwarm, parula, ocean.haline, brewer.blues, cubicl, kovesi.rainbow, ocean.phase, brewer.paired(12), stepped)
@@ -88,8 +88,8 @@ h_cum = 10
 
 nestboxes_clean <- pa_nestboxes %>% 
   dplyr::bind_rows(nj_nestboxes) %>% 
-  dplyr::filter(org %in% c("Central PA Conservancy",
-                           "Natural Lands"))
+  dplyr::filter(org %in% c("Central PA Program",
+                           "Southern NJ Program"))
 
 # chicks per year -----------------------------------------------------
 
@@ -100,7 +100,9 @@ nestboxes_clean %>%
                                combined = FALSE, 
                                labels_as_points = FALSE, 
                                label_col = chicks_banded) +
-  scale_color_manual(values = c("#FF8F99", "#3A8E4E"))
+  ggtitle("Banding-age young produced per year") +
+  scale_color_manual(values = c("#FF8F99", "#3A8E4E")) +
+  expand_limits(y = -10)
 save_ggplot("pa_nj_number_of_chicks_by_org.png", rfile, v, width = w, height = h, units = "in")
 
 
@@ -237,8 +239,35 @@ nj_2021 <- read_excel(here::here(paste0("020_data"),
   # distinct will take only the first row with each unique combination
   dplyr::distinct(nestbox_id, state, year, .keep_all = TRUE) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
+pa_2022 <- read_excel(here::here(paste0("020_data"),
+                                 "2022_PA_chicks.xlsx")) %>%
+  janitor::clean_names() %>%
+  dplyr::rename(date_1st_observed = date_1st_observed_as_active) %>%
+  replace_na(list(number_young_banded_s_mount=0,
+                  number_young_banded_u_mount=0,
+                  number_unbanded_young_to_12_day_banding_age=0)) %>% 
+  dplyr::mutate(state = "PA",
+                total_young = number_young_banded_s_mount +
+                  number_young_banded_u_mount + 
+                  number_unbanded_young_to_12_day_banding_age,
+                number_young_banded = number_young_banded_s_mount +
+                  number_young_banded_u_mount) %>% 
+  dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
+nj_2022 <- read_excel(here::here(paste0("020_data"),
+                                 "2022_NJ_chicks.xlsx")) %>%
+  janitor::clean_names() %>%
+  replace_na(list(number_young_banded_s_mount=0,
+                  number_young_banded_u_mount=0,
+                  number_unbanded_young_to_12_day_banding_age_u=0)) %>% 
+  dplyr::mutate(state = "NJ",
+                total_young = number_young_banded_s_mount +
+                  number_young_banded_u_mount + 
+                  number_unbanded_young_to_12_day_banding_age_u,
+                number_young_banded = number_young_banded_s_mount +
+                  number_young_banded_u_mount) %>% 
+  dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
 # combine
-combined <- dplyr::bind_rows(nj_2018, nj_2019, nj_2020, nj_2021, pa_2018, pa_2019, pa_2020, pa_2021) %>% 
+combined <- dplyr::bind_rows(nj_2018, nj_2019, nj_2020, nj_2021, nj_2022, pa_2018, pa_2019, pa_2020, pa_2021, pa_2022) %>% 
   arrange(state, year)
 combined_summary <- combined %>% 
   dplyr::group_by(state, year) %>% 
@@ -261,8 +290,8 @@ se_clean <- combined_summary %>%
   dplyr::mutate(chicks_per_box = round(mean_chicks_per_box, digits = 2),
                 org = ifelse(
                   state == "PA",
-                  "Central PA Conservancy",
-                  "Natural Lands"
+                  "Central PA Program",
+                  "Southern NJ Program"
                 ))
 
 # chicks per box ------------------------------------------------------
@@ -271,14 +300,16 @@ se_clean <- combined_summary %>%
 nestboxes_clean %>%
   dplyr::filter(chicks_per_box != 0) %>%
   drop_na(chicks_per_box) %>%
-  dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 1),
+  dplyr::mutate(chicks_per_box = round(chicks_per_box, digits = 2),
                 year_value = lubridate::year(year)) %>%
   dplyr::full_join(dplyr::select(se_clean, se_chicks_per_box, year, org),
                    by = c("year","org")) %>% 
   kestrel_plot_chicks_per_box(region = "Pennsylvania and New Jersey", se = TRUE) +
   scale_color_manual(values = c("#FF8F99", "#3A8E4E")) +
   expand_limits(y = 2.9) +
-  labs(caption = paste0("Error bars from 2018 to 2021 indicate ±1 standard error."))
+  theme(panel.grid.minor = element_blank()) +
+  labs(caption = paste0("Error bars indicate ±1 standard error. Error bars not available for 2015-2017."),
+       title = "Banding-age young per occupied box")
 save_ggplot("pa_nj_chicks_per_nested_box_se_allyears.png", rfile, v, width = w, height = h, units = "in")
 
 

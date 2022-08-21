@@ -3,7 +3,7 @@
 # Possibly broken up by:  
 # - M/F
 # - PA/NJ
-# - 2018/2019/2020/2021
+# - 2018/2019/2020/2021/2022
 
 # Setup ------------------------------------------------------------------------
 
@@ -104,39 +104,103 @@ nj_2021 <- read_excel(here::here(paste0(v, "_data"),
   dplyr::mutate(state = "NJ",
                 band_number = as.numeric(band_number))
 
+# no weights, just numbers per box for pa&nj 2022
+pa_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
+                                 "2022_PA_chicks.xlsx")) %>%
+  janitor::clean_names() %>%
+  dplyr::rename(date_1st_observed = date_1st_observed_as_active) %>%
+  replace_na(list(number_young_banded_s_mount=0,
+                  number_young_banded_u_mount=0,
+                  number_unbanded_young_to_12_day_banding_age=0)) %>% 
+  dplyr::mutate(state = "PA",
+                number_young_banded = number_young_banded_s_mount +
+                  number_young_banded_u_mount + 
+                  number_unbanded_young_to_12_day_banding_age)
+nj_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
+                                 "2022_NJ_chicks.xlsx")) %>%
+  janitor::clean_names() %>%
+  replace_na(list(number_young_banded_s_mount=0,
+                  number_young_banded_u_mount=0,
+                  number_unbanded_young_to_12_day_banding_age_u=0)) %>% 
+  dplyr::mutate(state = "NJ",
+                number_young_banded = number_young_banded_s_mount +
+                  number_young_banded_u_mount + 
+                  number_unbanded_young_to_12_day_banding_age_u)
+
+# weights for pa&nj
+pa_nj_2022 <- read_excel(here::here(paste0(v,"_data/2022_NJ_PA_chicks.xlsx"))) %>% 
+  pivot_longer(-AGE) %>% 
+  dplyr::rename(age = AGE,
+                weight_in_grams = value) %>% 
+  select(-name) %>% 
+  dplyr::mutate(sex = str_sub(age, -1),
+                age_in_days = parse_number(age),
+                year = 2022) %>% 
+  drop_na()
+
 # combine data ------------------------------------------------------------
 # remove unknown sex
 
 big_df <- dplyr::bind_rows(
-  pa_nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021
+  pa_nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_nj_2022
 ) %>%
   dplyr::filter(sex %in% c("m","f")) %>%
-  # yday_born doesn't work for 2021 since no banding dates
-  dplyr::mutate(yday_born = lubridate::yday(banding_date) - age_in_days)
+  # yday_born doesn't work for 2021 or 2022 since no banding dates
+  dplyr::mutate(yday_born = lubridate::yday(banding_date) - age_in_days,
+                sex_full = case_when(sex == "f" ~ "female",
+                                     sex == "m" ~ "male"))
+
+# how many unidentified sex?
+u_df <- dplyr::bind_rows(
+  pa_nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_nj_2022
+) %>%
+  dplyr::filter(!(sex %in% c("m","f"))) %>% 
+  dplyr::summarise()
 
 
 # plot weight vs age by sex -------------------------------------------------------
 
 # individual chicks
 p <- big_df %>%
-  ggplot(aes(x = age_in_days,
-             y = weight_in_grams,
-             col = sex)) +
-  geom_point(alpha = 0.4) +
-  geom_smooth(se = TRUE, level = 0.95,
-              method = "gam", formula = y ~ s(x, bs = "cs")) +
+  ggplot() +
+  geom_point(aes(x = age_in_days,
+                 y = weight_in_grams,
+                 col = sex_full),
+             alpha = 0.4) +
+  geom_smooth(aes(x = age_in_days,
+                  y = weight_in_grams,
+                  col = sex_full),
+              se = FALSE, level = 0.95,
+              method = "gam", formula = y ~ s(x, bs = "cs"),
+              size = 0.7) +
   scale_color_manual(values = c("chocolate1", "darkblue")) +
-  geom_hline(yintercept = 108, linetype='dashed', color = "darkblue") +
-  geom_hline(yintercept = 116, linetype='dashed', color = "chocolate1") +
+  geom_hline(yintercept = 108, linetype='dashed', color = "darkblue", size = 0.7) +
+  geom_hline(yintercept = 116, linetype='dashed', color = "chocolate1", size = 0.7) +
+  geom_text(data = data.frame(annotateText = "Dashed lines depict average male and female weight from data provided by BBL for banded adults in PA and NJ from 2018 to 2020.
+                Solid lines depict trends in male and female kestrel chicks using locally weighted smoothing."),
+            mapping = aes(x = 30, y = 64, label = annotateText),
+            inherit.aes = FALSE,
+            size = 3, hjust = 1) +
   labs(x= "Age (days)",
        y = "Weight (grams)",
-       title = paste0(nrow(big_df), " kestrel chicks in PA and NJ, 2018-2021"),
-       caption = "Dotted lines represent average weight from data provided by BBL for banded adults in PA and NJ from 2018 to 2020",
-       color = "Sex") +
+       title = paste0(nrow(big_df), " kestrel chicks in PA and NJ, 2018-2022"),
+       color = "Sex",
+       caption = "Note: 192 chicks whose sex could not be clearly determined were excluded.") +
   theme(legend.position = "bottom") +
   scale_x_continuous(breaks=seq(14,28,2))
 p
-save_ggplot("w_by_gender.png", rfile=rfile, v=v)
+save_ggplot("w_by_gender.png", rfile=rfile, v=v,
+            height = 6, width = 8)
+
+# calculate percent above adult weight at certain age
+big_df %>% 
+  dplyr::filter(age_in_days == 22, sex == "f") %>% 
+  dplyr::summarise(sum_big_116 = sum(weight_in_grams>116),
+                   n=n())
+big_df %>% 
+  dplyr::filter(age_in_days == 22, sex == "m") %>% 
+  dplyr::summarise(sum_big_116 = sum(weight_in_grams>108),
+                   n=n())
 
 # marginals
 ggExtra::ggMarginal(p,type="boxplot", groupFill = TRUE)
@@ -176,6 +240,27 @@ save_ggplot("w_by_gender_by_year.png", rfile=rfile, v=v)
 #   geom_smooth() +
 #   theme_bw()
 
+
+# Piecewise regression ----------------------------------------------------
+
+# female changepoint model
+model = list(
+  weight_in_grams ~ age_in_days,  # linear segment
+  ~ age_in_days  # another linear segment
+)
+library(mcp)
+fit = mcp(model, big_df %>% dplyr::filter(sex == "f"))
+plot(fit)
+plot_pars(fit, regex_pars = "cp_")
+
+# male changepoint model
+model_male = list(
+  weight_in_grams ~ age_in_days,  # linear segment
+  ~ age_in_days  # another linear segment
+)
+fit_male = mcp::mcp(model_wage, big_df %>% dplyr::filter(sex == "m"))
+plot(fit_male)
+plot_pars(fit_male, regex_pars = "cp_")
 
 # plot weight vs age by state and sex ---------------------------------------------
 
