@@ -108,6 +108,8 @@ nj_2021 <- read_excel(here::here(paste0(v, "_data"),
 pa_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
                                  "2022_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
+  dplyr::rename(number_young_banded_s_mount=number_young_banded_steel_pole_mount,
+                number_young_banded_u_mount=young_banded_utility_pole_mount) %>% 
   dplyr::rename(date_1st_observed = date_1st_observed_as_active) %>%
   replace_na(list(number_young_banded_s_mount=0,
                   number_young_banded_u_mount=0,
@@ -132,7 +134,7 @@ pa_nj_2022 <- read_excel(here::here(paste0(v,"_data/2022_NJ_PA_chicks.xlsx"))) %
   pivot_longer(-AGE) %>% 
   dplyr::rename(age = AGE,
                 weight_in_grams = value) %>% 
-  select(-name) %>% 
+  dplyr::select(-name) %>% 
   dplyr::mutate(sex = str_sub(age, -1),
                 age_in_days = parse_number(age),
                 year = 2022) %>% 
@@ -194,13 +196,15 @@ save_ggplot("w_by_gender.png", rfile=rfile, v=v,
 
 # calculate percent above adult weight at certain age
 big_df %>% 
-  dplyr::filter(age_in_days == 22, sex == "f") %>% 
+  dplyr::filter(age_in_days > 17, sex == "f") %>% 
   dplyr::summarise(sum_big_116 = sum(weight_in_grams>116),
-                   n=n())
+                   n=n(),
+                   prop=sum_big_116/n)
 big_df %>% 
-  dplyr::filter(age_in_days == 22, sex == "m") %>% 
+  dplyr::filter(age_in_days > 17, sex == "m") %>% 
   dplyr::summarise(sum_big_116 = sum(weight_in_grams>108),
-                   n=n())
+                   n=n(),
+                   prop = sum_big_116/n)
 
 # marginals
 ggExtra::ggMarginal(p,type="boxplot", groupFill = TRUE)
@@ -241,7 +245,30 @@ save_ggplot("w_by_gender_by_year.png", rfile=rfile, v=v)
 #   theme_bw()
 
 
-# Piecewise regression ----------------------------------------------------
+# Frequentist piecewise regression ----------------------------------------
+
+# females
+library(segmented)
+fit_lm = lm(weight_in_grams ~ 1 + age_in_days, 
+            data = big_df %>% dplyr::filter(sex == "f"))  # intercept-only model
+fit_segmented = segmented(fit_lm, seg.Z = ~age_in_days, npsi = 1)  # One change point along x
+summary(fit_segmented)
+confint(fit_segmented)
+slope(fit_segmented)
+BF = exp((BIC(fit_segmented) - BIC(fit_lm))/2)  # From Wagenmakers (2007)
+BF
+
+# males
+fit_lm = lm(weight_in_grams ~ 1 + age_in_days, 
+            data = big_df %>% dplyr::filter(sex == "m"))  # intercept-only model
+fit_segmented = segmented(fit_lm, seg.Z = ~age_in_days, npsi = 1)  # One change point along x
+summary(fit_segmented)
+confint(fit_segmented)
+slope(fit_segmented)
+BF = exp((BIC(fit_segmented) - BIC(fit_lm))/2)  # From Wagenmakers (2007)
+BF
+
+# Bayesian Piecewise regression ----------------------------------------------------
 
 # female changepoint model
 model = list(
