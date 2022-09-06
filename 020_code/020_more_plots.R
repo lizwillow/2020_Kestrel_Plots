@@ -35,99 +35,167 @@ theme_set(theme_liz)
 # load data ---------------------------------------------------------------
 
 ## NOTE: need to watch out when using tidyr::fill.
-## number_young_banded, number_unbanded_young_to_12_day_banding_age, and 
-## banding_date might be filling in the next nest incorrectly!!
-## Still need to fix that.
 
-pa_nj_2018 <- read_excel(here::here(paste0(v, "_data"),
-                                      "2018_PA_NJ_boxes.xlsx")) %>%
+
+nj_2018 <- read_excel(here::here(paste0(v, "_data"),
+                                 "2018_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  tidyr::fill(year, nestbox_id, number_young_banded, 
-              number_unbanded_young_to_12_day_banding_age,
-              state, banding_date, .direction = "down") %>%
-  dplyr::rename(band_number = band_number_1783)
+  tidyr::fill(nestbox_id, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2018,
+                state = "NJ") %>% 
+  dplyr::select(year, nestbox_id, 
+                state, sex, weight_in_grams, age_in_days,
+                banding_date
+  )
+pa_2018 <- read_excel(here::here(paste0(v, "_data"),
+                                 "2018_PA_chicks.xlsx")) %>%
+  janitor::clean_names() %>%
+  drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
+  tidyr::fill(nestbox_id, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2018,
+                state = "PA") %>% 
+  dplyr::select(year, nestbox_id, 
+                state, sex, weight_in_grams, age_in_days,
+                banding_date
+  )
 nj_2019 <- read_excel(here::here(paste0(v, "_data"),
                                     "2019_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  tidyr::fill(year, date_1st_observed, nestbox_id, number_young_banded, 
-              banding_date, .direction = "down") %>%
-  dplyr::rename(band_number = band_number_1892) %>%
-  dplyr::mutate(state = "NJ")
+  tidyr::fill(nestbox_id, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2019,
+                state = "NJ") %>% 
+  dplyr::select(year, nestbox_id, 
+                state, sex, weight_in_grams, age_in_days,
+                banding_date
+  )
 pa_2019 <- read_excel(here::here(paste0(v, "_data"),
                                  "2019_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  tidyr::fill(year, date_1st_observed, nestbox_id, number_young_banded, 
-              state, banding_date, status, .direction = "down") %>%
-  dplyr::rename(band_number = band_number_1892) %>%
-  dplyr::select(-c("x14","x15")) %>%
-  dplyr::mutate(state = "PA")
+  tidyr::fill(nestbox_id, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2019,
+                state = "PA") %>% 
+  dplyr::select(year, nestbox_id, 
+                state, sex, weight_in_grams, age_in_days,
+                banding_date
+  )
 nj_2020 <- read_excel(here::here(paste0(v, "_data"),
                                  "2020_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  dplyr::rename(nestbox_id = x2020_nestbox_id,
-                band_number = band_number_1893) %>%
-  tidyr::fill(date_1st_observed, nestbox_id, number_young_banded, 
-              state, banding_date, status, .direction = "down") %>%
-  dplyr::mutate(year = 2020)
+  dplyr::rename(nestbox_id = x2020_nestbox_id) %>%
+  tidyr::fill(nestbox_id, 
+              status, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2020,
+                state = "NJ") %>% 
+  dplyr::select(year, nestbox_id, status, 
+                state, sex, weight_in_grams, age_in_days,
+                banding_date
+  )
 pa_2020 <- read_excel(here::here(paste0(v, "_data"),
                                  "2020_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  dplyr::rename(band_number = band_number_1893,
-                date_1st_observed = date_1st_observed_as_active) %>%
-  dplyr::select(-c("x15")) %>%
-  tidyr::fill(nestbox_id, number_young_banded, 
-              banding_date, status, .direction = "down") %>%
-  dplyr::mutate(state = "PA",
-                band_number = as.numeric(band_number))
+  tidyr::fill(nestbox_id, 
+              status, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2020,
+                state = "PA") %>% 
+  dplyr::select(year, nestbox_id, status, 
+                state, sex, weight_in_grams, age_in_days,
+                banding_date
+  )
 pa_2021 <- read_excel(here::here(paste0(v, "_data"),
                                  "2021_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  dplyr::rename(band_number = band_number_1893,
-                date_1st_observed = date_1st_observed_as_active) %>%
+  dplyr::rename(date_1st_observed = date_1st_observed_as_active) %>%
   tidyr::fill(nestbox_id, 
               status, .direction = "down") %>%
-  dplyr::mutate(state = "PA",
-                band_number = as.numeric(band_number))
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(year, nestbox_id, status, 
+                state, sex, weight_in_grams, age_in_days,
+                banding_date
+  )
 nj_2021 <- read_excel(here::here(paste0(v, "_data"),
                                  "2021_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   drop_na(weightin_grams) %>% # remove those whose weight was not recorded
   dplyr::rename(weight_in_grams = weightin_grams) %>%
-  tidyr::fill(nestbox_id, number_young_banded,
+  tidyr::fill(nestbox_id,
               status, .direction = "down") %>%
-  dplyr::mutate(state = "NJ",
-                band_number = as.numeric(band_number))
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(state = "NJ") %>% 
+  dplyr::select(year, nestbox_id, status, 
+                state, sex, weight_in_grams, age_in_days,
+                banding_date
+  )
 
-# no weights, just numbers per box for pa&nj 2022
-pa_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
-                                 "2022_PA_chicks.xlsx")) %>%
-  janitor::clean_names() %>%
-  dplyr::rename(number_young_banded_s_mount=number_young_banded_steel_pole_mount,
-                number_young_banded_u_mount=young_banded_utility_pole_mount) %>% 
-  dplyr::rename(date_1st_observed = date_1st_observed_as_active) %>%
-  replace_na(list(number_young_banded_s_mount=0,
-                  number_young_banded_u_mount=0,
-                  number_unbanded_young_to_12_day_banding_age=0)) %>% 
-  dplyr::mutate(state = "PA",
-                number_young_banded = number_young_banded_s_mount +
-                  number_young_banded_u_mount + 
-                  number_unbanded_young_to_12_day_banding_age)
-nj_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
-                                 "2022_NJ_chicks.xlsx")) %>%
-  janitor::clean_names() %>%
-  replace_na(list(number_young_banded_s_mount=0,
-                  number_young_banded_u_mount=0,
-                  number_unbanded_young_to_12_day_banding_age_u=0)) %>% 
-  dplyr::mutate(state = "NJ",
-                number_young_banded = number_young_banded_s_mount +
-                  number_young_banded_u_mount + 
-                  number_unbanded_young_to_12_day_banding_age_u)
+# # no weights, just numbers per box for pa&nj 2022
+# pa_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
+#                                  "2022_PA_chicks.xlsx")) %>%
+#   janitor::clean_names() %>%
+#   drop_na(fledge_date) %>% 
+#   dplyr::mutate(year = "2022") %>% 
+#   dplyr::rename(number_young_banded_s_mount=number_young_banded_steel_pole_mount,
+#                 number_young_banded_u_mount=young_banded_utility_pole_mount) %>% 
+#   replace_na(list(number_young_banded_s_mount=0,
+#                   number_young_banded_u_mount=0,
+#                   number_unbanded_young_to_12_day_banding_age=0)) %>% 
+#   dplyr::mutate(state = "PA",
+#                 number_young_banded = number_young_banded_s_mount +
+#                   number_young_banded_u_mount + 
+#                   number_unbanded_young_to_12_day_banding_age) %>%
+#   dplyr::select(year, nestbox_id, status, 
+#                 state, fledge_date
+#   )
+# nj_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
+#                                  "2022_NJ_chicks.xlsx")) %>%
+#   janitor::clean_names() %>%
+#   janitor::clean_names() %>%
+#   drop_na(fledge_date) %>% 
+#   dplyr::mutate(year = "2022") %>% 
+#   replace_na(list(number_young_banded_s_mount=0,
+#                   number_young_banded_u_mount=0,
+#                   number_unbanded_young_to_12_day_banding_age_u=0)) %>% 
+#   dplyr::mutate(state = "PA",
+#                 number_young_banded = number_young_banded_s_mount +
+#                   number_young_banded_u_mount + 
+#                   number_unbanded_young_to_12_day_banding_age_u) %>%
+#   dplyr::select(year, nestbox_id, status, 
+#                 state, fledge_date
+#   )
 
 # weights for pa&nj
 pa_nj_2022 <- read_excel(here::here(paste0(v,"_data/2022_NJ_PA_chicks.xlsx"))) %>% 
@@ -138,26 +206,33 @@ pa_nj_2022 <- read_excel(here::here(paste0(v,"_data/2022_NJ_PA_chicks.xlsx"))) %
   dplyr::mutate(sex = str_sub(age, -1),
                 age_in_days = parse_number(age),
                 year = 2022) %>% 
-  drop_na()
+  drop_na() %>% 
+  dplyr::select(sex, year, weight_in_grams,
+                age_in_days)
 
 # combine data ------------------------------------------------------------
 # remove unknown sex
 
-big_df <- dplyr::bind_rows(
-  pa_nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_nj_2022
-) %>%
-  dplyr::filter(sex %in% c("m","f")) %>%
-  # yday_born doesn't work for 2021 or 2022 since no banding dates
-  dplyr::mutate(yday_born = lubridate::yday(banding_date) - age_in_days,
-                sex_full = case_when(sex == "f" ~ "female",
-                                     sex == "m" ~ "male"))
+bind_df <- dplyr::bind_rows(
+  pa_2018, nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_nj_2022
+)
 
-# how many unidentified sex?
-u_df <- dplyr::bind_rows(
-  pa_nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_nj_2022
-) %>%
+big_df <- bind_df %>% 
+  dplyr::select(sex, year, weight_in_grams,
+                age_in_days) %>%
+  dplyr::filter(sex %in% c("m","f")) %>%
+  dplyr::mutate(sex_full = case_when(sex == "f" ~ "female",
+                                     sex == "m" ~ "male"))
+save_rds(big_df, v=v, rfile = rfile)
+
+# how many unidentified sex? None in the dataset in 2022
+dplyr::bind_rows(
+  pa_2018, nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_nj_2022
+) %>% 
+  dplyr::select(sex, year, weight_in_grams,
+                age_in_days) %>%
   dplyr::filter(!(sex %in% c("m","f"))) %>% 
-  dplyr::summarise()
+  glimpse()
 
 
 # plot weight vs age by sex -------------------------------------------------------
@@ -187,14 +262,27 @@ p <- big_df %>%
        y = "Weight (grams)",
        title = paste0(nrow(big_df), " kestrel chicks in PA and NJ, 2018-2022"),
        color = "Sex",
-       caption = "Note: 192 chicks whose sex could not be clearly determined were excluded.") +
+       caption = "394 chicks whose sex was not recorded or could not be clearly determined were excluded.") +
   theme(legend.position = "bottom") +
-  scale_x_continuous(breaks=seq(14,28,2))
+  scale_x_continuous(breaks=seq(14,28,2)) + 
+  scale_y_continuous(breaks = sort(c(seq(60, 165, by = 20), 116, 108)))
 p
 save_ggplot("w_by_gender.png", rfile=rfile, v=v,
             height = 6, width = 8)
 
-# calculate percent above adult weight at certain age
+# calculate percent above adult weight at 15
+big_df %>% 
+  dplyr::filter(age_in_days == 15, sex == "f") %>% 
+  dplyr::summarise(sum_big_116 = sum(weight_in_grams>116),
+                   n=n(),
+                   prop=sum_big_116/n)
+big_df %>% 
+  dplyr::filter(age_in_days == 15, sex == "m") %>% 
+  dplyr::summarise(sum_big_116 = sum(weight_in_grams>108),
+                   n=n(),
+                   prop = sum_big_116/n)
+
+# calculate percent above adult weight above 17
 big_df %>% 
   dplyr::filter(age_in_days > 17, sex == "f") %>% 
   dplyr::summarise(sum_big_116 = sum(weight_in_grams>116),
