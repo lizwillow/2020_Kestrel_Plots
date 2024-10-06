@@ -33,100 +33,167 @@ theme_set(theme_liz)
 # load data ---------------------------------------------------------------
 
 ## NOTE: need to watch out when using tidyr::fill.
-## number_young_banded, number_unbanded_young_to_12_day_banding_age, and 
-## banding_date might be filling in the next nest incorrectly!!
-## Still need to fix that.
 
-pa_nj_2018 <- read_excel(here::here(paste0(v, "_data"),
-                                    "2018_PA_NJ_boxes.xlsx")) %>%
+
+nj_2018 <- read_excel(here::here(paste0(v, "_data"),
+                                 "2018_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  tidyr::fill(year, nestbox_id, number_young_banded, 
-              number_unbanded_young_to_12_day_banding_age,
-              state, banding_date, .direction = "down") %>%
-  dplyr::rename(band_number = band_number_1783) %>% 
+  tidyr::fill(nestbox_id, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  # calculate indiv fledge dates
+  dplyr::mutate(year = 2018,
+                state = "NJ",
+                fledge_date = (banding_date + lubridate::days(30 - age_in_days)) %>% 
+                  lubridate::round_date(unit = "days")) %>% 
+  # get mean fledge dates
+  dplyr::group_by(nestbox_id, year, state) %>%
+  dplyr::summarise(ave_fledge_date = mean(fledge_date) %>%
+                     lubridate::round_date(unit = "days")) %>%
+  dplyr::ungroup() %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
+pa_2018 <- read_excel(here::here(paste0(v, "_data"),
+                                 "2018_PA_chicks.xlsx")) %>%
+  janitor::clean_names() %>%
+  tidyr::fill(nestbox_id, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2018,
+                state = "PA") %>% 
   dplyr::mutate(fledge_date = (banding_date + lubridate::days(30 - age_in_days)) %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  dplyr::count(state, year, fledge_date, name = "count")
+  # get mean fledge dates
+  dplyr::group_by(nestbox_id, year, state) %>%
+  dplyr::summarise(ave_fledge_date = mean(fledge_date) %>%
+                     lubridate::round_date(unit = "days")) %>%
+  dplyr::ungroup() %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
 nj_2019 <- read_excel(here::here(paste0(v, "_data"),
                                  "2019_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  tidyr::fill(year, date_1st_observed, nestbox_id, number_young_banded, 
-              banding_date, .direction = "down") %>%
-  dplyr::rename(band_number = band_number_1892) %>%
-  dplyr::mutate(state = "NJ") %>% 
+  tidyr::fill(nestbox_id, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2019,
+                state = "NJ") %>% 
   dplyr::mutate(fledge_date = (banding_date + lubridate::days(30 - age_in_days)) %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  dplyr::count(state, year, fledge_date, name = "count")
+  # get mean fledge dates
+  dplyr::group_by(nestbox_id, year, state) %>%
+  dplyr::summarise(ave_fledge_date = mean(fledge_date) %>%
+                     lubridate::round_date(unit = "days")) %>%
+  dplyr::ungroup() %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
 pa_2019 <- read_excel(here::here(paste0(v, "_data"),
                                  "2019_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  tidyr::fill(year, date_1st_observed, nestbox_id, number_young_banded, 
-              state, banding_date, status, .direction = "down") %>%
-  dplyr::rename(band_number = band_number_1892) %>%
-  dplyr::select(-c("x14","x15")) %>%
-  dplyr::mutate(state = "PA") %>% 
+  tidyr::fill(nestbox_id, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2019,
+                state = "PA") %>% 
   dplyr::mutate(fledge_date = (banding_date + lubridate::days(30 - age_in_days)) %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  dplyr::count(state, year, fledge_date, name = "count")
+  # get mean fledge dates
+  dplyr::group_by(nestbox_id, year, state) %>%
+  dplyr::summarise(ave_fledge_date = mean(fledge_date) %>%
+                     lubridate::round_date(unit = "days")) %>%
+  dplyr::ungroup() %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
 nj_2020 <- read_excel(here::here(paste0(v, "_data"),
                                  "2020_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  dplyr::rename(nestbox_id = x2020_nestbox_id,
-                band_number = band_number_1893) %>%
-  tidyr::fill(date_1st_observed, nestbox_id, number_young_banded, 
-              state, banding_date, status, .direction = "down") %>%
-  dplyr::mutate(year = 2020) %>% 
+  dplyr::rename(nestbox_id = x2020_nestbox_id) %>%
+  tidyr::fill(nestbox_id, 
+              status, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2020,
+                state = "NJ") %>% 
   dplyr::mutate(fledge_date = (banding_date + lubridate::days(30 - age_in_days)) %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  dplyr::count(state, year, fledge_date, name = "count")
+  # get mean fledge dates
+  dplyr::group_by(nestbox_id, year, state) %>%
+  dplyr::summarise(ave_fledge_date = mean(fledge_date) %>%
+                     lubridate::round_date(unit = "days")) %>%
+  dplyr::ungroup() %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
 pa_2020 <- read_excel(here::here(paste0(v, "_data"),
                                  "2020_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  dplyr::rename(band_number = band_number_1893,
-                date_1st_observed = date_1st_observed_as_active) %>%
-  dplyr::select(-c("x15")) %>%
-  tidyr::fill(nestbox_id, number_young_banded, 
-              banding_date, status, .direction = "down") %>%
-  dplyr::mutate(state = "PA",
-                band_number = as.numeric(band_number),
+  tidyr::fill(nestbox_id, 
+              status, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(year = 2020,
+                state = "PA",
                 fledge_date = (banding_date + lubridate::days(30 - age_in_days)) %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  dplyr::count(state, year, fledge_date, name = "count")
+  # get mean fledge dates
+  dplyr::group_by(nestbox_id, year, state) %>%
+  dplyr::summarise(ave_fledge_date = mean(fledge_date) %>%
+                     lubridate::round_date(unit = "days")) %>%
+  dplyr::ungroup() %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
 pa_2021 <- read_excel(here::here(paste0(v, "_data"),
                                  "2021_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  drop_na(weight_in_grams) %>% # remove those whose weight was not recorded
-  dplyr::rename(band_number = band_number_1893,
-                date_1st_observed = date_1st_observed_as_active,
-                banding_date = banding_date_15) %>%
+  dplyr::rename(date_1st_observed = date_1st_observed_as_active) %>%
   tidyr::fill(nestbox_id, 
-              status,
-              banding_date, .direction = "down") %>%
+              status, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>%
   dplyr::mutate(state = "PA",
-                band_number = as.numeric(band_number),
                 fledge_date = (banding_date + lubridate::days(30 - age_in_days)) %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  dplyr::count(state, year, fledge_date, name = "count")
+  # get mean fledge dates
+  dplyr::group_by(nestbox_id, year, state) %>%
+  dplyr::summarise(ave_fledge_date = mean(fledge_date) %>%
+                     lubridate::round_date(unit = "days")) %>%
+  dplyr::ungroup() %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
                 
 nj_2021 <- read_excel(here::here(paste0(v, "_data"),
                                  "2021_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
-  drop_na(weightin_grams) %>% # remove those whose weight was not recorded
-  dplyr::rename(weight_in_grams = weightin_grams) %>%
-  tidyr::fill(nestbox_id, number_young_banded,
-              status, banding_date, .direction = "down") %>%
+  tidyr::fill(nestbox_id,
+              status, .direction = "down") %>%
+  # fill banding dates within nestbox IDs
+  dplyr::group_by(nestbox_id) %>% 
+  tidyr::fill(banding_date) %>% 
+  dplyr::ungroup() %>% 
   dplyr::mutate(state = "NJ",
-                band_number = as.numeric(band_number),
                 fledge_date = (banding_date + lubridate::days(30 - age_in_days)) %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  dplyr::count(state, year, fledge_date, name = "count")
+  # get mean fledge dates
+  dplyr::group_by(nestbox_id, year, state) %>%
+  dplyr::summarise(ave_fledge_date = mean(fledge_date) %>%
+                     lubridate::round_date(unit = "days")) %>%
+  dplyr::ungroup() %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
                 
-
 # no weights, just numbers per box for pa&nj 2022
 pa_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
                                       "2022_PA_chicks.xlsx")) %>%
@@ -142,12 +209,11 @@ pa_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
                   number_young_banded_u_mount + 
                   number_unbanded_young_to_12_day_banding_age,
                 year = 2022,
-                fledge_date = fledge_date %>% 
+                ave_fledge_date = fledge_date %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  drop_na(fledge_date) %>% 
-  dplyr::group_by(year, state, fledge_date) %>% 
-  dplyr::summarise(count = sum(number_young_banded)) %>% 
-  dplyr::ungroup()
+  drop_na(ave_fledge_date) %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
 nj_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
                                       "2022_NJ_chicks.xlsx")) %>%
   janitor::clean_names() %>%
@@ -158,55 +224,108 @@ nj_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
                 number_young_banded = number_young_banded_s_mount +
                   number_young_banded_u_mount + 
                   number_unbanded_young_to_12_day_banding_age_u,
-                fledge_date = fledge_date %>% 
+                ave_fledge_date = fledge_date %>% 
                   lubridate::round_date(unit = "days")) %>% 
-  drop_na(fledge_date) %>% 
-  dplyr::group_by(year, state, fledge_date) %>% 
-  dplyr::summarise(count = sum(number_young_banded)) %>% 
-  dplyr::ungroup()
+  drop_na(ave_fledge_date) %>%
+  # count up mean fledge dates
+  dplyr::count(state, year, ave_fledge_date, name = "count")
 
-# weights only for pa&nj
-pa_nj_2022 <- read_excel(here::here(paste0(v,"_data/2022_NJ_PA_chicks.xlsx"))) %>% 
-  pivot_longer(-AGE) %>% 
-  dplyr::rename(age = AGE,
-                weight_in_grams = value) %>% 
-  dplyr::select(-name) %>% 
-  dplyr::mutate(sex = str_sub(age, -1),
-                age_in_days = parse_number(age),
-                year = 2022) %>% 
-  drop_na()
+# # weights only for pa&nj
+# pa_nj_2022 <- read_excel(here::here(paste0(v,"_data/2022_NJ_PA_chicks.xlsx"))) %>% 
+#   pivot_longer(-AGE) %>% 
+#   dplyr::rename(age = AGE,
+#                 weight_in_grams = value) %>% 
+#   dplyr::select(-name) %>% 
+#   dplyr::mutate(sex = str_sub(age, -1),
+#                 age_in_days = parse_number(age),
+#                 year = 2022) %>% 
+#   drop_na()
 
 # combine data ------------------------------------------------------------
 # remove unknown sex
 
 big_df_dates <- dplyr::bind_rows(
-  pa_nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_2022_nowt, nj_2022_nowt
+  pa_2018, nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_2022_nowt, nj_2022_nowt
 )
 
 # all same year
-lubridate::year(big_df_dates$fledge_date) = 2000
+lubridate::year(big_df_dates$ave_fledge_date) = 2000
 
 big_df_counts <- big_df_dates %>% 
+  drop_na(ave_fledge_date) %>% 
   dplyr::group_by(year, state) %>% 
-  complete(fledge_date = seq(min(fledge_date), 
-                                 max(fledge_date), by="day"),
+  complete(ave_fledge_date = seq(min(ave_fledge_date), 
+                                 max(ave_fledge_date), by="day"),
            fill = list(count = 0)) %>% 
   # get moving average
   dplyr::mutate(rolling_ave = zoo::rollmean(count, k = 7, fill = NA))
 
-big_df_counts %>% 
-  ggplot(aes(x = fledge_date, y = rolling_ave)) +
+p1 <- big_df_counts %>% 
+  ggplot(aes(x = ave_fledge_date, y = rolling_ave)) +
   geom_line(aes(color = as.factor(year))) +
   facet_wrap(~ state) +
-  labs(y = "7 day rolling average of fledgelings per day",
-       title = "Estimated 30-day-old fledge dates") +
+  labs(y = "Nestboxes per day (7-day rolling average)",
+       title = "Estimated mean 30-day-old fledge dates") +
   theme(legend.title = element_blank(),
         axis.title.x = element_blank()) +
   scale_color_manual(values = c('#AD2323', '#3cb44b', '#4363d8', '#f58231', '#42d4f4', '#f032e6', '#fabed4', '#9A6324', '#a9a9a9', '#000000')
-)
-save_ggplot("fledge_dates.png", rfile=rfile, v=v,
+) 
+p1
+save_ggplot("ave_fledge_dates.png", rfile=rfile, v=v,
             width = 7, height = 4)  
-  
-  
-  
-  
+
+# Add medians --------------------------------------------
+
+big_df_wmed <- as.data.frame(lapply(big_df_counts, 
+                                    rep, 
+                                    big_df_counts$count)) %>% 
+  dplyr::group_by(state, year) %>% 
+  dplyr::summarise(median_date = median(ave_fledge_date))
+
+# add annotations
+dat_text <- data.frame(
+  label = c(
+  "Median fledge dates:
+   2018: 7/5
+   2019: 6/22
+   2020: 6/18
+   2021: 6/23
+   2022: 6/25", 
+  "Median fledge dates:
+   2018: 7/1
+   2019: 6/22
+   2020: 6/16
+   2021: 6/19
+   2022: 6/19"),
+  state   = c("NJ", "PA"))
+p1 + geom_text(
+  data    = dat_text,
+  mapping = aes(x = max(big_df_counts$ave_fledge_date)-lubridate::days(60), 
+                y = 4, label = label),
+  hjust = 0,
+  size = 3
+)
+save_ggplot("ave_fledge_dates_w_medians.png", rfile=rfile, v=v,
+            width = 7, height = 4) 
+
+# p2 <- big_df_wmed %>% 
+#   ggplot(aes(x = median_date, y = 0)) +
+#   geom_hline(aes(yintercept = 0), color = "grey") +
+#   geom_point(aes(color = as.factor(year)),
+#              ) +
+#   facet_wrap(~ state) +
+#   theme(legend.title = element_blank(),
+#         axis.title = element_blank()) +
+#   scale_color_manual(values = c('#AD2323', '#3cb44b', '#4363d8', '#f58231', '#42d4f4', '#f032e6', '#fabed4', '#9A6324', '#a9a9a9', '#000000')
+#   ) +
+#   theme_void() +
+#   theme(legend.position = "none",
+#         strip.background = element_blank(),
+#         strip.text.x = element_blank()) +
+#   scale_x_continuous(limits = c(min(big_df_counts$ave_fledge_date), 
+#                                 max(big_df_counts$ave_fledge_date)))
+# p2
+#   
+# library(patchwork)
+# p1/p2   + 
+#   plot_layout(heights = c(10, 1))

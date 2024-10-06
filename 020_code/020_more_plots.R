@@ -263,7 +263,8 @@ p <- big_df %>%
        title = paste0(nrow(big_df), " kestrel chicks in PA and NJ, 2018-2022"),
        color = "Sex",
        caption = "394 chicks whose sex was not recorded or could not be clearly determined were excluded.") +
-  theme(legend.position = "bottom") +
+  theme(legend.position = "bottom",
+        panel.grid.minor = element_blank()) +
   scale_x_continuous(breaks=seq(14,28,2)) + 
   scale_y_continuous(breaks = sort(c(seq(60, 165, by = 20), 116, 108)))
 p
