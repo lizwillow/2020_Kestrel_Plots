@@ -1,0 +1,547 @@
+nestbox_id,state,year,total_young,number_young_banded
+Quirk,NJ,2018,5,5
+Bitter,NJ,2018,5,5
+Winkles,NJ,2018,5,5
+Calumet,NJ,2018,5,5
+CT Church,NJ,2018,4,4
+CT West,NJ,2018,4,4
+Clark1,NJ,2018,5,5
+McHugh,NJ,2018,5,5
+CT Sharp,NJ,2018,4,4
+CT NW,NJ,2018,4,4
+CT East,NJ,2018,5,5
+English,NJ,2018,5,5
+DEP East Lake,NJ,2018,4,4
+Verechia,NJ,2018,4,4
+Clark2,NJ,2018,3,3
+Halter,NJ,2018,4,4
+White,NJ,2018,3,3
+Vasallo,NJ,2018,3,3
+CTDEP,NJ,2018,3,3
+Smith - Aldine,NJ,2018,5,5
+Perozzi,NJ,2018,0,0
+Melchert,NJ,2018,0,0
+CT Kings,NJ,2018,0,0
+Bitter,NJ,2019,2,2
+Calumet,NJ,2019,3,3
+Clark,NJ,2019,5,5
+CTChurch,NJ,2019,5,5
+CTDEP,NJ,2019,5,5
+CTSharp,NJ,2019,4,4
+CTWest,NJ,2019,5,5
+D-ArrigoWest,NJ,2019,3,3
+DEP-Lincoln,NJ,2019,4,4
+ELDEP,NJ,2019,1,1
+Halter,NJ,2019,5,5
+Marx East,NJ,2019,0,0
+MarxWest,NJ,2019,0,0
+Melchert,NJ,2019,2,2
+Pedrick,NJ,2019,3,3
+Perozzi,NJ,2019,4,4
+Smith,NJ,2019,5,5
+Vassallo,NJ,2019,5,5
+Villari,NJ,2019,4,4
+Williams,NJ,2019,0,0
+Winkel East,NJ,2019,5,5
+Atkinson,NJ,2020,5,5
+Calumet,NJ,2020,3,3
+Chemours,NJ,2020,5,5
+Clark,NJ,2020,4,4
+Coles,NJ,2020,4,4
+CTDEP,NJ,2020,3,3
+CTEast,NJ,2020,0,0
+CTMarlton,NJ,2020,0,0
+CTRodeo,NJ,2020,5,5
+CTSharp,NJ,2020,3,3
+CTWest,NJ,2020,4,4
+D'Arrigno NW,NJ,2020,1,1
+D'Arrigno S,NJ,2020,5,5
+Davis,NJ,2020,5,5
+Freas,NJ,2020,5,5
+Kinsley Landfill,NJ,2020,4,4
+Myers rte 77,NJ,2020,3,3
+Ostrum N,NJ,2020,5,5
+Pedrick,NJ,2020,5,5
+Perozzi,NJ,2020,4,4
+Sickler,NJ,2020,5,5
+Smith,NJ,2020,4,4
+Vasallo,NJ,2020,4,4
+Verechia,NJ,2020,5,5
+Villari,NJ,2020,5,5
+White,NJ,2020,3,3
+Williams,NJ,2020,0,0
+Winkel N,NJ,2020,4,4
+Winkel S,NJ,2020,5,5
+Atkinson,NJ,2021,4,4
+Bitter,NJ,2021,3,3
+Calumet,NJ,2021,0,0
+Clark,NJ,2021,0,0
+CTDEP,NJ,2021,2,2
+CTEast,NJ,2021,4,4
+CTSharp M,NJ,2021,0,0
+CTWest,NJ,2021,3,3
+Cunniff,NJ,2021,0,0
+D'Arrigno E,NJ,2021,2,2
+D'Arrigno NW,NJ,2021,4,4
+D'Arrigno S,NJ,2021,5,5
+Davis West,NJ,2021,4,4
+Dawes,NJ,2021,1,1
+Dickinson,NJ,2021,3,3
+Freas,NJ,2021,5,5
+Kinsley N,NJ,2021,5,5
+Kinsley S,NJ,2021,3,3
+NJDEP Harrison,NJ,2021,4,4
+Ostrum,NJ,2021,5,5
+Pedrick,NJ,2021,4,4
+Perozzi,NJ,2021,5,5
+Sickler,NJ,2021,4,4
+Smith,NJ,2021,0,0
+Van Cleave,NJ,2021,5,5
+Vasallo,NJ,2021,5,5
+Verechia,NJ,2021,5,5
+Villari,NJ,2021,0,0
+Williams,NJ,2021,5,5
+Winkels E,NJ,2021,4,4
+Atkinson,NJ,2022,2,2
+Bowling,NJ,2022,5,5
+Chemours S,NJ,2022,4,0
+Chemours Helipad,NJ,2022,5,0
+Clark,NJ,2022,5,5
+CT Church,NJ,2022,5,5
+CT DEP,NJ,2022,5,5
+CT East,NJ,2022,4,4
+CT FB02,NJ,2022,4,4
+CT Sharp N,NJ,2022,4,4
+CT West,NJ,2022,3,3
+D'Arrigo East,NJ,2022,3,3
+D'Arrigo NW,NJ,2022,5,5
+Davis,NJ,2022,4,4
+Dawes,NJ,2022,5,5
+Dickinson,NJ,2022,5,5
+Freas,NJ,2022,5,5
+Kinsley N,NJ,2022,5,5
+Kinsley S,NJ,2022,5,5
+Marx North,NJ,2022,4,4
+Myers rte 40,NJ,2022,4,4
+NJDEP Harrisonville,NJ,2022,5,5
+Ostrum,NJ,2022,2,2
+Pedrick,NJ,2022,4,4
+Perozzi,NJ,2022,4,4
+Quirk South,NJ,2022,5,5
+Sickler,NJ,2022,5,5
+Smith,NJ,2022,4,4
+Van Cleave,NJ,2022,5,5
+Vassallo,NJ,2022,0,0
+Verechia,NJ,2022,2,2
+White,NJ,2022,5,5
+Williams,NJ,2022,3,3
+Wine,NJ,2022,4,4
+Everhart south,PA,2018,5,5
+Allebach west,PA,2018,3,3
+Gordon east,PA,2018,3,3
+Nardozzo,PA,2018,4,4
+Sevick,PA,2018,5,5
+Haughwout,PA,2018,2,2
+Goss utility,PA,2018,4,4
+Soder,PA,2018,5,5
+Allebach East,PA,2018,2,2
+Sheridan,PA,2018,5,5
+Neer,PA,2018,5,5
+Lash,PA,2018,5,5
+Allebach hill,PA,2019,5,5
+Bee Tree Berry,PA,2019,0,0
+Brown,PA,2019,4,4
+Buergin,PA,2019,5,5
+Burd,PA,2019,5,5
+Esh,PA,2019,0,0
+Everhart South,PA,2019,5,5
+Gordon East,PA,2019,5,5
+Gordon West,PA,2019,5,5
+Goss East,PA,2019,5,5
+Goss West,PA,2019,5,5
+Haughout East,PA,2019,5,5
+Haughout West,PA,2019,5,5
+Johnston East,PA,2019,5,5
+Johnston West,PA,2019,5,5
+Kimble,PA,2019,1,1
+Lash,PA,2019,0,0
+Lingle east,PA,2019,4,4
+Martin North,PA,2019,5,5
+Martin South,PA,2019,4,4
+Nardozzo,PA,2019,5,5
+Neer,PA,2019,2,2
+Nelson East,PA,2019,1,1
+Nelson West,PA,2019,5,5
+Pasquinelli,PA,2019,3,3
+PSU Swine Farm,PA,2019,4,4
+Sheridan South,PA,2019,4,4
+Soder,PA,2019,5,5
+Stout,PA,2019,5,5
+Wolfe East,PA,2019,4,4
+Wolfe North,PA,2019,4,4
+Yutsy,PA,2019,5,5
+Zook,PA,2019,5,5
+Allebach center,PA,2020,0,0
+Allebach E,PA,2020,5,5
+Anderson S,PA,2020,5,5
+Anderson W,PA,2020,5,5
+Bee Tree Berry,PA,2020,5,5
+Beiler W,PA,2020,4,4
+Boring S,PA,2020,5,5
+Boyd Big Tree Preserve,PA,2020,4,4
+Brown John,PA,2020,5,5
+Brown Scott,PA,2020,5,5
+Buergin E,PA,2020,4,4
+Buergin W,PA,2020,5,5
+Burd,PA,2020,4,4
+Burris N,PA,2020,4,4
+Burris S,PA,2020,5,5
+Cash,PA,2020,3,3
+Coffman E,PA,2020,5,5
+Coffman W,PA,2020,3,3
+Cole - Race Track,PA,2020,4,4
+Eberly W,PA,2020,5,5
+Eutzy E,PA,2020,5,5
+Eutzy W,PA,2020,5,5
+Everhart N,PA,2020,4,4
+Everhart S,PA,2020,5,5
+Everhart South 2nd nest,PA,2020,3,3
+Failor N,PA,2020,4,4
+Failor S,PA,2020,0,0
+Girl Scouts Golden Pond,PA,2020,4,4
+Gordon E,PA,2020,4,4
+Gordon W,PA,2020,5,5
+Goss S,PA,2020,5,5
+Goss W,PA,2020,4,4
+Hartman,PA,2020,5,5
+Haughwout E,PA,2020,4,4
+Haughwout W,PA,2020,4,4
+Johnston W,PA,2020,5,5
+Kimble,PA,2020,5,5
+Kissinger N,PA,2020,4,4
+Kunes W,PA,2020,4,4
+Lash,PA,2020,4,4
+Lilley NW,PA,2020,0,0
+Lingle E,PA,2020,5,5
+Lingle W,PA,2020,4,4
+Martin E,PA,2020,5,5
+Martin N,PA,2020,2,2
+Martin SW,PA,2020,4,4
+Metz W,PA,2020,5,5
+Miller,PA,2020,3,3
+Mittendorf-Wojdlak S,PA,2020,5,5
+Myers,PA,2020,1,1
+Nardazzo,PA,2020,3,3
+Neer W,PA,2020,5,5
+Nelson E,PA,2020,4,4
+Nelson W,PA,2020,5,5
+Nelson W telescoping pole late nest,PA,2020,4,4
+Ombalski,PA,2020,4,1
+Pasquinelli,PA,2020,3,3
+Peachey D&B,PA,2020,4,4
+Poduszlo,PA,2020,5,5
+PSU Haller,PA,2020,3,3
+PSU horse E,PA,2020,5,5
+PSU Solar,PA,2020,5,5
+PSU Swine,PA,2020,4,4
+PSU W,PA,2020,0,0
+Schilling N,PA,2020,1,1
+Schilling S,PA,2020,4,4
+Schilling W,PA,2020,4,4
+Schleiden,PA,2020,4,4
+Soder NE,PA,2020,5,5
+Stout,PA,2020,4,4
+Tormey N,PA,2020,0,0
+Wheland,PA,2020,5,5
+Wolfe E,PA,2020,4,4
+Wolfe N,PA,2020,4,4
+Wolfe NW,PA,2020,3,3
+Wolfe SW,PA,2020,4,4
+Yutsy,PA,2020,5,5
+Yutsy 2nd nest,PA,2020,0,0
+Zook N,PA,2020,5,5
+Zook S,PA,2020,4,4
+Allebach E,PA,2021,0,0
+Allebach W,PA,2021,5,5
+Anderson M,PA,2021,5,5
+Anderson S,PA,2021,5,5
+Barnoff,PA,2021,1,1
+Bee Tree Berry,PA,2021,2,2
+Beiler E,PA,2021,5,5
+Beiler W,PA,2021,1,1
+Boring N,PA,2021,5,5
+Boring SW,PA,2021,4,4
+Boring SE,PA,2021,3,3
+Brown Bob,PA,2021,5,5
+Brown John SW,PA,2021,4,4
+Brown Paul,PA,2021,5,5
+Brown S&E ROW,PA,2021,5,5
+Brown S&E W,PA,2021,5,5
+Buergin E,PA,2021,4,4
+Burd,PA,2021,4,4
+Burris SE,PA,2021,5,5
+Campbell,PA,2021,5,5
+Cash E,PA,2021,5,5
+Cash W,PA,2021,4,4
+Coffman E,PA,2021,4,4
+Coffman S,PA,2021,2,2
+Coffman W,PA,2021,5,5
+Cole - Race Track,PA,2021,5,5
+Cole - Tussey Sink,PA,2021,4,4
+Connelly,PA,2021,4,4
+Coursen,PA,2021,5,5
+Davis N,PA,2021,4,4
+Davis S,PA,2021,2,2
+Dolan,PA,2021,2,2
+Eberly NW,PA,2021,5,5
+Eberly S,PA,2021,4,4
+Esh E,PA,2021,2,2
+Esh W,PA,2021,2,2
+Eutzy E,PA,2021,5,5
+Eutzy E2,PA,2021,2,2
+Eutzy W,PA,2021,2,2
+Eutzy W2,PA,2021,5,5
+Everhart N,PA,2021,5,5
+Everhart S,PA,2021,5,5
+Eysenbach,PA,2021,3,3
+Failor S,PA,2021,4,4
+Girl Scouts Golden Pond,PA,2021,3,3
+Glick,PA,2021,4,4
+Gordon E,PA,2021,4,4
+Gordon S,PA,2021,4,4
+Gordon W,PA,2021,5,5
+Goss E,PA,2021,5,5
+Goss Middle,PA,2021,5,5
+Goss S,PA,2021,5,5
+Goss W,PA,2021,0,0
+Harding,PA,2021,5,5
+Hartman,PA,2021,3,3
+Haughwout E,PA,2021,5,5
+Haughwout W,PA,2021,5,5
+Hockinberry W,PA,2021,3,3
+Hylbert,PA,2021,4,4
+Johnston E,PA,2021,5,5
+Johnston W,PA,2021,4,4
+Keister,PA,2021,4,4
+Kissinger N,PA,2021,4,4
+Koleno,PA,2021,5,5
+Kunes E,PA,2021,5,5
+Kunes W,PA,2021,4,4
+Landis,PA,2021,4,4
+Lash,PA,2021,4,4
+Lecrone,PA,2021,5,5
+Lilley E,PA,2021,5,5
+Lilley NW,PA,2021,5,5
+Lingle E,PA,2021,4,4
+Lingle W,PA,2021,5,5
+Martin E,PA,2021,3,3
+Martin N,PA,2021,4,4
+Martin SW,PA,2021,4,4
+McDowell,PA,2021,4,4
+Metz B west,PA,2021,5,5
+Metz C north,PA,2021,4,4
+Metz C south,PA,2021,3,3
+Metz R,PA,2021,4,4
+Meyer,PA,2021,5,5
+Miller,PA,2021,5,5
+Mittendorf-Wojdlak S,PA,2021,4,4
+Moore N,PA,2021,5,5
+Moore S,PA,2021,3,3
+Myers,PA,2021,5,5
+Nardozzo,PA,2021,0,0
+Neer E,PA,2021,5,5
+Nelson E,PA,2021,5,5
+Nelson Hoy,PA,2021,2,2
+Nelson NW,PA,2021,0,0
+Nelson NW utility,PA,2021,4,4
+Peachey D&B,PA,2021,5,5
+Peachey P&J,PA,2021,5,5
+Poduszlo,PA,2021,5,5
+Price,PA,2021,4,3
+PSU Haller W,PA,2021,2,2
+PSU Haller E,PA,2021,4,4
+PSU horse N,PA,2021,4,4
+PSU horse W,PA,2021,4,4
+PSU Solar SE,PA,2021,2,2
+PSU Solar W,PA,2021,5,5
+PSU Swine N,PA,2021,0,0
+Schilling E,PA,2021,4,4
+Schilling S,PA,2021,4,4
+Schilling NE,PA,2021,4,4
+Schilling W,PA,2021,5,5
+Schleiden,PA,2021,5,5
+Sheridan S,PA,2021,3,3
+Soder SW,PA,2021,4,4
+Stout,PA,2021,5,5
+Tormey N,PA,2021,4,4
+Weidensaul,PA,2021,5,5
+Wolfe E,PA,2021,4,4
+Wolfe N,PA,2021,3,3
+Wolfe NW,PA,2021,4,4
+Wolfe SW,PA,2021,5,5
+Wolfe W,PA,2021,5,5
+Yoder,PA,2021,5,5
+Yutsy,PA,2021,3,3
+Zook N,PA,2021,4,4
+Zook S,PA,2021,4,4
+Allebach E,PA,2022,4,4
+Allebach hill,PA,2022,5,5
+Anderson M,PA,2022,5,5
+Anderson S,PA,2022,5,5
+Anderson W,PA,2022,0,0
+Barnoff,PA,2022,2,2
+Bascom,PA,2022,5,5
+Bee Tree Berry,PA,2022,3,3
+Bee Tree Berry,PA,2022,2,2
+Beiler back,PA,2022,1,1
+Beiler utility,PA,2022,3,3
+Boring E,PA,2022,4,4
+Boring N,PA,2022,3,3
+Boring S,PA,2022,5,5
+Brown B,PA,2022,0,0
+Brown J NE,PA,2022,4,4
+Brown J sisters,PA,2022,5,5
+Brown J SW,PA,2022,5,5
+Brown P,PA,2022,5,5
+Brown S house,PA,2022,5,5
+Brown S ROW,PA,2022,5,5
+Brown S utility,PA,2022,4,4
+Buergin,PA,2022,5,5
+Burd,PA,2022,5,5
+Burris house,PA,2022,9,9
+Burris middle,PA,2022,5,5
+Burris SE,PA,2022,5,5
+Campbell,PA,2022,4,4
+Cash E,PA,2022,4,4
+Coffman E,PA,2022,5,5
+Coffman NW,PA,2022,0,0
+Coffman S,PA,2022,0,0
+Coffman W,PA,2022,5,5
+Cole Race Track,PA,2022,5,5
+Cole Taylor Hill,PA,2022,5,5
+Connelly,PA,2022,4,4
+Cusatis,PA,2022,0,0
+Davis E,PA,2022,5,5
+Davis NW,PA,2022,5,5
+Davis SW,PA,2022,4,4
+Eberly hilltop,PA,2022,5,5
+Eberly N,PA,2022,4,4
+Eberly SE,PA,2022,4,4
+Esh E,PA,2022,1,1
+Esh middle,PA,2022,3,3
+Esh W,PA,2022,5,5
+Eutzy E,PA,2022,5,5
+Eutzy E2,PA,2022,4,4
+Eutzy W,PA,2022,5,5
+Eutzy W2,PA,2022,5,5
+Everhart N,PA,2022,4,4
+Everhart S,PA,2022,8,8
+Eysenbach,PA,2022,5,5
+Failor N,PA,2022,4,4
+Gastiger,PA,2022,4,4
+Girl Scout GP,PA,2022,3,3
+Gordon E,PA,2022,5,0
+Gordon S,PA,2022,5,5
+Gordon W,PA,2022,5,5
+Goss hill,PA,2022,4,4
+Goss middle,PA,2022,4,4
+Goss S utility,PA,2022,5,5
+Goss swamp,PA,2022,5,5
+Harding,PA,2022,0,0
+Harding M,PA,2022,4,0
+Hartman NW,PA,2022,2,2
+Hartman SE,PA,2022,5,5
+Haughwout E,PA,2022,5,5
+Haughwout W,PA,2022,4,4
+Heinrichs,PA,2022,3,3
+Hertzler,PA,2022,4,4
+Hockenberry back,PA,2022,0,0
+Hockenberry hill,PA,2022,5,5
+Hylbert,PA,2022,5,5
+Imes E,PA,2022,5,5
+Johnston hill,PA,2022,4,4
+Johnston lower,PA,2022,4,4
+Kavanaugh,PA,2022,4,4
+Keister,PA,2022,5,5
+Kimble utility,PA,2022,5,5
+Kissinger,PA,2022,5,5
+Koleno N,PA,2022,5,5
+Koleno S,PA,2022,5,5
+Kostohryz,PA,2022,0,0
+Kunes by house,PA,2022,5,5
+Kunes utility,PA,2022,5,5
+Landis,PA,2022,2,2
+Lash,PA,2022,5,5
+Lilly E,PA,2022,5,5
+Lilly NW,PA,2022,5,0
+Lingle E,PA,2022,5,5
+Lingle W,PA,2022,5,5
+Martin E,PA,2022,4,4
+Martin J&M,PA,2022,0,0
+Martin N,PA,2022,5,5
+Martin N2,PA,2022,0,0
+Martin South,PA,2022,4,4
+McDowell,PA,2022,5,5
+Metz B East,PA,2022,5,5
+Metz B West,PA,2022,5,5
+Metz C back field,PA,2022,5,5
+Metz C house,PA,2022,6,6
+Metz C roadside,PA,2022,4,4
+Metz R,PA,2022,5,5
+Meyer Dairy,PA,2022,5,5
+Miller,PA,2022,5,5
+Mittendorf,PA,2022,5,5
+Moore N,PA,2022,4,4
+Moore S,PA,2022,0,0
+Moore W,PA,2022,5,5
+Myers,PA,2022,5,5
+Nardozzo,PA,2022,5,5
+Neer E,PA,2022,5,3
+Neer W,PA,2022,4,4
+Nelson back E,PA,2022,5,5
+Nelson NW steel,PA,2022,0,0
+Nelson SW swamp,PA,2022,5,5
+Nelson utility,PA,2022,5,5
+Pasquinelli,PA,2022,6,6
+Peachey D,PA,2022,4,4
+Peachey P,PA,2022,4,4
+Perkins,PA,2022,5,5
+Poduszlo,PA,2022,4,4
+Price,PA,2022,4,4
+PSU Haller barn,PA,2022,5,5
+PSU Haller Seibert,PA,2022,5,5
+PSU horse N,PA,2022,5,5
+PSU horse W,PA,2022,5,5
+PSU hospital N,PA,2022,0,0
+PSU solar E,PA,2022,5,5
+PSU solar W,PA,2022,5,5
+PSU swine utility,PA,2022,2,2
+Schilling E,PA,2022,6,6
+Schilling S house,PA,2022,5,5
+Schilling W,PA,2022,5,5
+Schleiden,PA,2022,5,5
+Sevick,PA,2022,4,4
+Sheridan,PA,2022,4,4
+Soder SW,PA,2022,4,4
+Stout,PA,2022,5,5
+Tormey N,PA,2022,4,4
+Tormey S,PA,2022,4,4
+Weidensaul S,PA,2022,4,4
+Wheland,PA,2022,6,6
+Wolfe E,PA,2022,5,5
+Wolfe M,PA,2022,4,4
+Wolfe N,PA,2022,5,5
+Wolfe NW,PA,2022,2,2
+Wolfe SW,PA,2022,5,5
+Wolfe W,PA,2022,5,5
+Wolfe W2,PA,2022,3,3
+Yoder - Lilley,PA,2022,5,5
+Yoder-petersburg,PA,2022,5,5
+Yutsy-Wentzel,PA,2022,0,0
+Zook N,PA,2022,5,5
+Zook S,PA,2022,8,8
+Burris house 2nd,PA,NA,0,0
+Zook S 2nd,PA,NA,0,0
+Tormey N 2nd,PA,NA,0,0
+Bee Tree 2nd,PA,NA,0,0
+Everhart S 2nd,PA,NA,0,0

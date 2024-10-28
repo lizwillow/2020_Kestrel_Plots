@@ -243,15 +243,15 @@ pa_2022 <- read_excel(here::here(paste0("020_data"),
                                  "2022_PA_chicks.xlsx")) %>%
   janitor::clean_names() %>%
   dplyr::rename(date_1st_observed = date_1st_observed_as_active) %>%
-  replace_na(list(number_young_banded_s_mount=0,
-                  number_young_banded_u_mount=0,
+  replace_na(list(number_young_banded_steel_pole_mount=0,
+                  young_banded_utility_pole_mount=0,
                   number_unbanded_young_to_12_day_banding_age=0)) %>% 
   dplyr::mutate(state = "PA",
-                total_young = number_young_banded_s_mount +
-                  number_young_banded_u_mount + 
+                total_young = number_young_banded_steel_pole_mount +
+                  young_banded_utility_pole_mount + 
                   number_unbanded_young_to_12_day_banding_age,
-                number_young_banded = number_young_banded_s_mount +
-                  number_young_banded_u_mount) %>% 
+                number_young_banded = number_young_banded_steel_pole_mount +
+                  young_banded_utility_pole_mount) %>% 
   dplyr::select(nestbox_id, state, year, total_young, number_young_banded)
 nj_2022 <- read_excel(here::here(paste0("020_data"),
                                  "2022_NJ_chicks.xlsx")) %>%
@@ -269,6 +269,10 @@ nj_2022 <- read_excel(here::here(paste0("020_data"),
 # combine
 combined <- dplyr::bind_rows(nj_2018, nj_2019, nj_2020, nj_2021, nj_2022, pa_2018, pa_2019, pa_2020, pa_2021, pa_2022) %>% 
   arrange(state, year)
+# write product to csv
+readr::write_csv(combined,here::here(paste0(v,"_data"), "panj_upto2022_chicksperbox.csv"))
+
+# summary table
 combined_summary <- combined %>% 
   dplyr::group_by(state, year) %>% 
   dplyr::summarise(n_boxes = n(),

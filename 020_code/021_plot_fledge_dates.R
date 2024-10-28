@@ -247,8 +247,12 @@ nj_2022_nowt <- read_excel(here::here(paste0(v, "_data"),
 big_df_dates <- dplyr::bind_rows(
   pa_2018, nj_2018, nj_2019, pa_2019, nj_2020, pa_2020, pa_2021, nj_2021, pa_2022_nowt, nj_2022_nowt
 )
+# create data product
+readr::write_csv(big_df_dates %>% 
+                   drop_na(ave_fledge_date), 
+                 here::here(paste0(v, "_data"), rfile, "panj_upto2022_dates.csv"))
 
-# all same year
+# make them all same year for plotting
 lubridate::year(big_df_dates$ave_fledge_date) = 2000
 
 big_df_counts <- big_df_dates %>% 
